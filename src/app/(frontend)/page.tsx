@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { SiteNav } from './components/SiteNav'
 import { SiteFooter } from './components/SiteFooter'
 
+export const dynamic = 'force-dynamic'
+
 // The homepage reads SiteSettings — your CMS visibility switches work from day one.
 export default async function Home() {
   const payload = await getPayload({ config })

@@ -1,6 +1,8 @@
 import { SiteNav } from '../components/SiteNav'
 import { SiteFooter } from '../components/SiteFooter'
 
+export const dynamic = 'force-dynamic'
+
 const faqs: { q: string; a: string }[] = [
   {
     q: 'What is Broadexa?',

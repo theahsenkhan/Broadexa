@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { SiteNav } from '../components/SiteNav'
 import { SiteFooter } from '../components/SiteFooter'
 
+export const dynamic = 'force-dynamic'
+
 export default function SellPage() {
   return (
     <>
