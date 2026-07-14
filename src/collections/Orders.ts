@@ -29,5 +29,14 @@ export const Orders: CollectionConfig = {
     { name: 'stripePaymentIntentId', type: 'text', admin: { readOnly: true } },
     { name: 'downloadCount', type: 'number', defaultValue: 0, admin: { readOnly: true } },
     { name: 'notes', type: 'textarea', admin: { description: 'Refunds are case-by-case (locked decision) — record reasoning here.' } },
+    {
+      name: 'milestones', type: 'array', label: 'Milestones (custom projects)',
+      admin: { condition: (data) => data?.orderType === 'custom-project' },
+      fields: [
+        { name: 'title', type: 'text', required: true },
+        { name: 'amount', type: 'number', required: true },
+        { name: 'status', type: 'select', defaultValue: 'pending', options: ['pending', 'in-progress', 'delivered', 'paid'] },
+      ],
+    },
   ],
 }

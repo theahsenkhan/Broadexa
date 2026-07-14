@@ -1,6 +1,8 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import Link from 'next/link'
+import { SiteNav } from './components/SiteNav'
+import { SiteFooter } from './components/SiteFooter'
 
 // The homepage reads SiteSettings — your CMS visibility switches work from day one.
 export default async function Home() {
@@ -21,24 +23,7 @@ export default async function Home() {
 
   return (
     <>
-      <div className="container">
-        <nav className="nav">
-          <div className="logo">BROADEXA</div>
-          <div className="navlinks">
-            {sections?.marketplace && <Link href="/marketplace">Marketplace</Link>}
-            {sections?.services && <Link href="/services">Services</Link>}
-            {sections?.awards && <Link href="/awards">Awards</Link>}
-            {sections?.blog && <Link href="/blog">Blog</Link>}
-            {sections?.jobs && <Link href="/jobs">Jobs</Link>}
-          </div>
-          <div className="nav-cta">
-            <Link className="btn btn-ghost" href="/admin">Sign in</Link>
-            {sections?.sellPage && (
-              <Link className="btn btn-primary" href="/sell">Sell your scenes</Link>
-            )}
-          </div>
-        </nav>
-      </div>
+      <SiteNav />
 
       <section className="hero">
         <div className="tc">● REC — Coming soon</div>
@@ -87,12 +72,7 @@ export default async function Home() {
         </section>
       )}
 
-      <div className="container">
-        <footer className="footer">
-          <div className="logo" style={{ fontSize: 13 }}>BROADEXA</div>
-          <span>{settings?.tagline || 'The home of broadcast design'}</span>
-        </footer>
-      </div>
+      <SiteFooter />
     </>
   )
 }

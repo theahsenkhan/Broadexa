@@ -1,0 +1,36 @@
+import Link from 'next/link'
+import { getPayload } from 'payload'
+import config from '@payload-config'
+import { getSessionUser } from '@/lib/session'
+
+export async function SiteNav() {
+  const payload = await getPayload({ config })
+  const settings = await payload.findGlobal({ slug: 'site-settings' }).catch(() => null)
+  const sections = settings?.sections
+  const user = await getSessionUser().catch(() => null)
+
+  return (
+    <div className="container">
+      <nav className="nav">
+        <Link href="/" className="logo">BROADEXA</Link>
+        <div className="navlinks">
+          {sections?.marketplace && <Link href="/marketplace">Marketplace</Link>}
+          {sections?.services && <Link href="/services">Services</Link>}
+          {sections?.awards && <Link href="/awards">Awards</Link>}
+          {sections?.blog && <Link href="/blog">Blog</Link>}
+          {sections?.jobs && <Link href="/jobs">Jobs</Link>}
+        </div>
+        <div className="nav-cta">
+          {user ? (
+            <Link className="btn btn-ghost" href="/dashboard">Dashboard</Link>
+          ) : (
+            <Link className="btn btn-ghost" href="/login">Sign in</Link>
+          )}
+          {sections?.sellPage && !user && (
+            <Link className="btn btn-primary" href="/sell">Sell your scenes</Link>
+          )}
+        </div>
+      </nav>
+    </div>
+  )
+}

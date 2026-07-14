@@ -19,7 +19,12 @@ export const Bids: CollectionConfig = {
       return false
     },
     create: ({ req }) => req.user?.role === 'designer',
-    update: ({ req }) => req.user?.role === 'admin',
+    // Admin, or the project owner accepting/declining bids on their own project.
+    update: ({ req }) => {
+      if (req.user?.role === 'admin') return true
+      if (req.user) return { 'project.postedBy': { equals: req.user.id } }
+      return false
+    },
     delete: ({ req }) => req.user?.role === 'admin',
   },
   fields: [
@@ -30,4 +35,18 @@ export const Bids: CollectionConfig = {
     { name: 'message', type: 'textarea' },
     { name: 'status', type: 'select', defaultValue: 'submitted', options: ['submitted', 'accepted', 'declined', 'withdrawn'] },
   ],
+  hooks: {
+    afterChange: [
+      async ({ doc, operation, req }) => {
+        if (operation !== 'create') return
+        const projectId = typeof doc.project === 'object' ? doc.project.id : doc.project
+        const project = await req.payload.findByID({ collection: 'projects', id: projectId })
+        await req.payload.update({
+          collection: 'projects',
+          id: projectId,
+          data: { bidCount: (project.bidCount || 0) + 1 },
+        })
+      },
+    ],
+  },
 }

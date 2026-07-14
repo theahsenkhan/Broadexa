@@ -3,10 +3,12 @@ import { fileURLToPath } from 'url'
 import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { s3Storage } from '@payloadcms/storage-s3'
 import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { AssetFiles } from './collections/AssetFiles'
 import { Engines } from './collections/Engines'
 import { Categories } from './collections/Categories'
 import { Assets } from './collections/Assets'
@@ -21,12 +23,17 @@ import { SiteSettings } from './globals/SiteSettings'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+// R2 (Phase 2) is optional — falls back to local disk storage until these are set.
+const r2Configured = Boolean(
+  process.env.R2_ACCOUNT_ID && process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY && process.env.R2_BUCKET,
+)
+
 export default buildConfig({
   admin: {
     user: Users.slug,
     meta: { titleSuffix: '— Broadexa Admin' },
   },
-  collections: [Users, Media, Assets, Engines, Categories, Orders, Projects, Bids, Posts, Jobs, AwardEntries],
+  collections: [Users, Media, AssetFiles, Assets, Engines, Categories, Orders, Projects, Bids, Posts, Jobs, AwardEntries],
   globals: [SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
@@ -35,4 +42,25 @@ export default buildConfig({
     pool: { connectionString: process.env.DATABASE_URI || '' },
   }),
   sharp,
+  plugins: r2Configured
+    ? [
+        s3Storage({
+          collections: {
+            media: { disableLocalStorage: true },
+            'asset-files': { disableLocalStorage: true },
+          },
+          bucket: process.env.R2_BUCKET as string,
+          clientUploads: true,
+          config: {
+            endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+            region: 'auto',
+            credentials: {
+              accessKeyId: process.env.R2_ACCESS_KEY_ID as string,
+              secretAccessKey: process.env.R2_SECRET_ACCESS_KEY as string,
+            },
+            forcePathStyle: true,
+          },
+        }),
+      ]
+    : [],
 })

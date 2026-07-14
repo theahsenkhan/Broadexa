@@ -50,6 +50,9 @@ export const Assets: CollectionConfig = {
     { name: 'previewVideoUrl', type: 'text', label: 'Preview video URL (Cloudflare Stream — Phase 2)' },
     { name: 'onEngineRecordingUrl', type: 'text', label: 'On-engine screen recording URL (verification proof)' },
 
+    // ── Deliverable (locked: buyers cannot open the file first — download is gated by order status) ──
+    { name: 'file', type: 'upload', relationTo: 'asset-files', label: 'Downloadable package (buyers only get this after purchase)' },
+
     // ── Trust (locked: Verified badge, admin-granted, no recording = no badge) ──
     {
       name: 'verified', type: 'checkbox', defaultValue: false,
