@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, Where } from 'payload'
 
 export const Bids: CollectionConfig = {
   slug: 'bids',
@@ -7,11 +7,14 @@ export const Bids: CollectionConfig = {
     // Private bids (locked): only the project owner, the bidding designer, and admin can read
     read: ({ req }) => {
       if (req.user?.role === 'admin') return true
-      if (req.user) return {
-        or: [
-          { designer: { equals: req.user.id } },
-          { 'project.postedBy': { equals: req.user.id } },
-        ],
+      if (req.user) {
+        const where: Where = {
+          or: [
+            { designer: { equals: req.user.id } },
+            { 'project.postedBy': { equals: req.user.id } },
+          ],
+        }
+        return where
       }
       return false
     },

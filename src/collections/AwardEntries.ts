@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, Where } from 'payload'
 
 export const AwardEntries: CollectionConfig = {
   slug: 'award-entries',
@@ -7,7 +7,10 @@ export const AwardEntries: CollectionConfig = {
     read: ({ req }) => {
       if (req.user?.role === 'admin') return true
       // entrants see their own; winners are public
-      if (req.user) return { or: [{ entrant: { equals: req.user.id } }, { status: { equals: 'winner' } }] }
+      if (req.user) {
+        const where: Where = { or: [{ entrant: { equals: req.user.id } }, { status: { equals: 'winner' } }] }
+        return where
+      }
       return { status: { equals: 'winner' } }
     },
     create: ({ req }) => Boolean(req.user),
