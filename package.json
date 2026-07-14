@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "generate:types": "payload generate:types",
-    "payload": "payload"
+    "payload": "payload",
+    "seed": "node --env-file=.env --import tsx src/seed.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.0.0",
