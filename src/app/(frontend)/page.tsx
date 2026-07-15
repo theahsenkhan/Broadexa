@@ -8,20 +8,20 @@ export const dynamic = 'force-dynamic'
 
 // The homepage reads SiteSettings — your CMS visibility switches work from day one.
 export default async function Home() {
-  const payload = await getPayload({ config })
+  const payload = await getPayload({ config }).catch(() => null)
 
-  const settings = await payload.findGlobal({ slug: 'site-settings' }).catch(() => null)
+  const settings = await payload?.findGlobal({ slug: 'site-settings' }).catch(() => null)
   const sections = settings?.sections
 
   const assets = await payload
-    .find({
+    ?.find({
       collection: 'assets',
       where: { status: { equals: 'published' } },
       limit: 4,
       sort: '-createdAt',
       depth: 1,
     })
-    .catch(() => ({ docs: [] as any[] }))
+    .catch(() => ({ docs: [] as any[] })) ?? { docs: [] as any[] }
 
   return (
     <>

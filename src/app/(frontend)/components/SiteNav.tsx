@@ -4,8 +4,9 @@ import config from '@payload-config'
 import { getSessionUser } from '@/lib/session'
 
 export async function SiteNav() {
-  const payload = await getPayload({ config })
-  const settings = await payload.findGlobal({ slug: 'site-settings' }).catch(() => null)
+  const settings = await getPayload({ config })
+    .then((payload) => payload.findGlobal({ slug: 'site-settings' }))
+    .catch(() => null)
   const sections = settings?.sections
   const user = await getSessionUser().catch(() => null)
 

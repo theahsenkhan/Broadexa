@@ -3,8 +3,9 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 
 export async function SiteFooter() {
-  const payload = await getPayload({ config })
-  const settings = await payload.findGlobal({ slug: 'site-settings' }).catch(() => null)
+  const settings = await getPayload({ config })
+    .then((payload) => payload.findGlobal({ slug: 'site-settings' }))
+    .catch(() => null)
 
   return (
     <div className="container">
