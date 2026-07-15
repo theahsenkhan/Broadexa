@@ -20,6 +20,7 @@ export const AwardEntries: CollectionConfig = {
   fields: [
     { name: 'title', type: 'text', required: true },
     { name: 'entrant', type: 'relationship', relationTo: 'users', required: true },
+    { name: 'competition', type: 'relationship', relationTo: 'competitions', label: 'Competition (optional)' },
     { name: 'awardCategory', type: 'text', required: true },
     { name: 'year', type: 'number', required: true, defaultValue: 2026 },
     { name: 'videoUrl', type: 'text', required: true, label: 'Entry video URL' },

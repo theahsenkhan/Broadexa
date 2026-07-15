@@ -18,6 +18,7 @@ export async function SiteNav() {
           {sections?.marketplace && <Link href="/marketplace">Marketplace</Link>}
           {sections?.services && <Link href="/services">Services</Link>}
           {sections?.awards && <Link href="/awards">Awards</Link>}
+          {sections?.competitions && <Link href="/competitions">Competitions</Link>}
           {sections?.blog && <Link href="/blog">Blog</Link>}
           {sections?.jobs && <Link href="/jobs">Jobs</Link>}
         </div>

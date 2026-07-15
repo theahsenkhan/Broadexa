@@ -13,6 +13,7 @@ export const SiteSettings: GlobalConfig = {
         { name: 'marketplace', type: 'checkbox', defaultValue: false, label: 'Show Marketplace' },
         { name: 'services', type: 'checkbox', defaultValue: false, label: 'Show Services' },
         { name: 'awards', type: 'checkbox', defaultValue: false, label: 'Show Awards' },
+        { name: 'competitions', type: 'checkbox', defaultValue: false, label: 'Show Competitions' },
         { name: 'blog', type: 'checkbox', defaultValue: false, label: 'Show Blog' },
         { name: 'jobs', type: 'checkbox', defaultValue: false, label: 'Show Jobs' },
         { name: 'sellPage', type: 'checkbox', defaultValue: false, label: 'Show "Sell your scenes"' },

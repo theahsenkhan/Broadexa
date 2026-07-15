@@ -3,10 +3,20 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-export function EnterForm({ userId, engines }: { userId: string; engines: { id: string; name: string }[] }) {
+export function EnterForm({
+  userId,
+  engines,
+  competitionId,
+  defaultCategory,
+}: {
+  userId: string
+  engines: { id: string; name: string }[]
+  competitionId?: string
+  defaultCategory?: string
+}) {
   const router = useRouter()
   const [title, setTitle] = useState('')
-  const [awardCategory, setAwardCategory] = useState('')
+  const [awardCategory, setAwardCategory] = useState(defaultCategory || '')
   const [year, setYear] = useState(new Date().getFullYear().toString())
   const [videoUrl, setVideoUrl] = useState('')
   const [description, setDescription] = useState('')
@@ -26,6 +36,7 @@ export function EnterForm({ userId, engines }: { userId: string; engines: { id: 
         body: JSON.stringify({
           title,
           entrant: userId,
+          competition: competitionId || undefined,
           awardCategory,
           year: Number(year),
           videoUrl,
