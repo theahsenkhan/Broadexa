@@ -19,6 +19,7 @@ import { Posts } from './collections/Posts'
 import { Jobs } from './collections/Jobs'
 import { AwardEntries } from './collections/AwardEntries'
 import { SiteSettings } from './globals/SiteSettings'
+import { migrations } from './migrations'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -48,6 +49,9 @@ export default buildConfig({
       ssl: { rejectUnauthorized: false },
       connectionTimeoutMillis: 8000,
     },
+    // Payload only auto-pushes schema outside production. In production it
+    // runs these on the first successful connect instead.
+    prodMigrations: migrations,
   }),
   sharp,
   plugins: r2Configured
