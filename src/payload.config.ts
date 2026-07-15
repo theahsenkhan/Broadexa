@@ -39,7 +39,15 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
   db: postgresAdapter({
-    pool: { connectionString: process.env.DATABASE_URI || '' },
+    pool: {
+      connectionString: process.env.DATABASE_URI || '',
+      // Supabase requires SSL; the pg driver won't negotiate it from the
+      // connection string alone. Bounded timeout so a bad connection fails
+      // fast with a real error instead of hanging until the host platform
+      // kills the request.
+      ssl: { rejectUnauthorized: false },
+      connectionTimeoutMillis: 8000,
+    },
   }),
   sharp,
   plugins: r2Configured
