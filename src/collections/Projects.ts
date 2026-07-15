@@ -26,5 +26,9 @@ export const Projects: CollectionConfig = {
       options: ['open', 'awarded', 'in-progress', 'delivered', 'closed'],
     },
     { name: 'bidCount', type: 'number', defaultValue: 0, admin: { description: 'Shown publicly. Bids themselves are private (locked decision).' } },
+
+    // ── SEO (optional overrides) ──
+    { name: 'seoTitle', type: 'text', admin: { position: 'sidebar' } },
+    { name: 'seoDescription', type: 'textarea', admin: { position: 'sidebar' } },
   ],
 }

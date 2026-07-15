@@ -19,6 +19,7 @@ import { Posts } from './collections/Posts'
 import { Jobs } from './collections/Jobs'
 import { AwardEntries } from './collections/AwardEntries'
 import { Competitions } from './collections/Competitions'
+import { FaqItems } from './collections/FaqItems'
 import { SiteSettings } from './globals/SiteSettings'
 import { migrations } from './migrations'
 
@@ -35,7 +36,7 @@ export default buildConfig({
     user: Users.slug,
     meta: { titleSuffix: '— Broadexa Admin' },
   },
-  collections: [Users, Media, AssetFiles, Assets, Engines, Categories, Orders, Projects, Bids, Posts, Jobs, AwardEntries, Competitions],
+  collections: [Users, Media, AssetFiles, Assets, Engines, Categories, Orders, Projects, Bids, Posts, Jobs, AwardEntries, Competitions, FaqItems],
   globals: [SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

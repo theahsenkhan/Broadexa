@@ -1,6 +1,8 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { notFound } from 'next/navigation'
+import { cache } from 'react'
+import type { Metadata } from 'next'
 import { SiteNav } from '../../components/SiteNav'
 import { SiteFooter } from '../../components/SiteFooter'
 import { getSessionUser } from '@/lib/session'
@@ -9,10 +11,25 @@ import { BidRow } from './BidRow'
 
 export const dynamic = 'force-dynamic'
 
+const getProject = cache(async (id: string) => {
+  const payload = await getPayload({ config })
+  return payload.findByID({ collection: 'projects', id, depth: 1 }).catch(() => null) as Promise<any>
+})
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const project = await getProject(id)
+  if (!project) return {}
+  return {
+    title: project.seoTitle || `${project.title} — Broadexa Services`,
+    description: project.seoDescription || project.description?.slice(0, 160),
+  }
+}
+
 export default async function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const payload = await getPayload({ config })
-  const project: any = await payload.findByID({ collection: 'projects', id, depth: 1 }).catch(() => null)
+  const project = await getProject(id)
   if (!project) notFound()
 
   const user = await getSessionUser().catch(() => null)

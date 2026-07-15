@@ -75,5 +75,9 @@ export const Assets: CollectionConfig = {
       access: { update: adminOnly },
     },
     { name: 'featured', type: 'checkbox', defaultValue: false, admin: { position: 'sidebar' }, access: { update: adminOnly } },
+
+    // ── SEO (optional overrides) ──
+    { name: 'seoTitle', type: 'text', admin: { position: 'sidebar' } },
+    { name: 'seoDescription', type: 'textarea', admin: { position: 'sidebar' } },
   ],
 }

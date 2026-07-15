@@ -8,12 +8,21 @@ export async function SiteNav() {
     .then((payload) => payload.findGlobal({ slug: 'site-settings' }))
     .catch(() => null)
   const sections = settings?.sections
+  const extraLinks = settings?.extraNavLinks || []
+  const logo: any = settings?.logo
   const user = await getSessionUser().catch(() => null)
 
   return (
     <div className="container">
       <nav className="nav">
-        <Link href="/" className="logo">BROADEXA</Link>
+        <Link href="/" className="logo">
+          {logo?.url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logo.url} alt="Broadexa" style={{ height: 22 }} />
+          ) : (
+            'BROADEXA'
+          )}
+        </Link>
         <div className="navlinks">
           {sections?.marketplace && <Link href="/marketplace">Marketplace</Link>}
           {sections?.services && <Link href="/services">Services</Link>}
@@ -21,6 +30,9 @@ export async function SiteNav() {
           {sections?.competitions && <Link href="/competitions">Competitions</Link>}
           {sections?.blog && <Link href="/blog">Blog</Link>}
           {sections?.jobs && <Link href="/jobs">Jobs</Link>}
+          {extraLinks.map((l: any, i: number) => (
+            <a key={i} href={l.url}>{l.label}</a>
+          ))}
         </div>
         <div className="nav-cta">
           {user ? (

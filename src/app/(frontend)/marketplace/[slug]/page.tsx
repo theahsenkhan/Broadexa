@@ -1,6 +1,8 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { notFound } from 'next/navigation'
+import { cache } from 'react'
+import type { Metadata } from 'next'
 import { SiteNav } from '../../components/SiteNav'
 import { SiteFooter } from '../../components/SiteFooter'
 import { BuyBox } from './BuyBox'
@@ -8,18 +10,30 @@ import { getSessionUser } from '@/lib/session'
 
 export const dynamic = 'force-dynamic'
 
-export default async function ListingPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
+const getAsset = cache(async (slug: string) => {
   const payload = await getPayload({ config })
-
   const result = await payload.find({
     collection: 'assets',
     where: { slug: { equals: slug }, status: { equals: 'published' } },
     limit: 1,
     depth: 2,
   })
+  return result.docs[0] as any
+})
 
-  const asset: any = result.docs[0]
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const asset = await getAsset(slug)
+  if (!asset) return {}
+  return {
+    title: asset.seoTitle || `${asset.title} — Broadexa`,
+    description: asset.seoDescription || asset.description?.slice(0, 160),
+  }
+}
+
+export default async function ListingPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const asset = await getAsset(slug)
   if (!asset) notFound()
 
   const user = await getSessionUser().catch(() => null)
