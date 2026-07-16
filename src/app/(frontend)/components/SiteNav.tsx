@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { getSessionUser } from '@/lib/session'
+import { CartBadge } from './CartBadge'
 
 export async function SiteNav() {
   const settings = await getPayload({ config })
@@ -35,6 +36,7 @@ export async function SiteNav() {
           ))}
         </div>
         <div className="nav-cta">
+          <CartBadge />
           {user ? (
             <Link className="btn btn-ghost" href="/dashboard">Dashboard</Link>
           ) : (

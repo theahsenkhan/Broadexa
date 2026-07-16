@@ -1,12 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { addToCart, isInCart, removeFromCart } from '@/lib/cart'
 
 export function BuyBox({ asset, isLoggedIn }: { asset: any; isLoggedIn: boolean }) {
   const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState('')
+  const [inCart, setInCart] = useState(false)
+
+  useEffect(() => {
+    setInCart(isInCart(String(asset.id)))
+  }, [asset.id])
+
+  function toggleCart() {
+    if (inCart) {
+      removeFromCart(String(asset.id))
+      setInCart(false)
+    } else {
+      addToCart(String(asset.id))
+      setInCart(true)
+    }
+  }
 
   async function startCheckout(orderType: 'standard' | 'exclusive') {
     if (!isLoggedIn) {
@@ -68,6 +84,11 @@ export function BuyBox({ asset, isLoggedIn }: { asset: any; isLoggedIn: boolean 
         <button className="btn btn-primary btn-block" disabled={loading !== null} onClick={() => startCheckout('standard')}>
           {loading === 'standard' ? 'Redirecting…' : asset.isFree ? 'Get it free' : 'Buy now'}
         </button>
+        {!asset.isFree && (
+          <button className="btn btn-ghost btn-block" style={{ marginTop: 8 }} disabled={loading !== null} onClick={toggleCart}>
+            {inCart ? '✓ In cart — remove' : '+ Add to cart'}
+          </button>
+        )}
       </div>
 
       {asset.exclusiveAvailable && (

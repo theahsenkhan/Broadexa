@@ -1,6 +1,7 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { notFound, redirect } from 'next/navigation'
+import Link from 'next/link'
 import { getSessionUser } from '@/lib/session'
 import { MessageThread } from '../../../messages/MessageThread'
 import { DownloadButton } from '../DownloadButton'
@@ -45,8 +46,9 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       </p>
 
       {(order.status === 'paid' || order.status === 'delivered') && (
-        <div style={{ marginBottom: 24 }}>
+        <div style={{ marginBottom: 24, display: 'flex', gap: 10 }}>
           <DownloadButton orderId={order.id} />
+          <Link className="btn btn-ghost" href={`/dashboard/orders/${order.id}/invoice`}>View receipt</Link>
         </div>
       )}
 
