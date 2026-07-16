@@ -33,6 +33,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             {isDesigner && <Link href="/dashboard/new-asset">Upload asset</Link>}
             <Link href="/dashboard/orders">Orders</Link>
             <Link href="/dashboard/projects">Projects &amp; bids</Link>
+            <Link href="/dashboard/jobs">Jobs</Link>
             {isDesigner && <Link href="/dashboard/payouts">Payouts</Link>}
           </nav>
           <div>{children}</div>

@@ -6,6 +6,8 @@ import { SiteFooter } from './components/SiteFooter'
 
 export const dynamic = 'force-dynamic'
 
+const DEFAULT_ORDER = ['valueProps', 'featured', 'free', 'stats', 'testimonials']
+
 // The homepage reads SiteSettings — your CMS visibility switches work from day one.
 export default async function Home() {
   const payload = await getPayload({ config }).catch(() => null)
@@ -50,44 +52,32 @@ export default async function Home() {
 
   const stats = settings?.stats || []
   const testimonials = settings?.testimonials || []
+  const valueProps = settings?.valueProps || []
+  const order = settings?.sectionOrder && settings.sectionOrder.length > 0 ? settings.sectionOrder : DEFAULT_ORDER
 
-  return (
-    <>
-      <SiteNav />
+  const heroBg: any = settings?.heroBackgroundImage
+  const heroVideoUrl = settings?.heroBackgroundVideoUrl
 
-      <section className="hero">
-        <div className="tc">{settings?.heroEyebrow || '● REC — Coming soon'}</div>
-        <h1>
-          <em>{settings?.heroHeadline || 'The home of broadcast design'}</em>
-        </h1>
-        <p>
-          {settings?.heroSubhead ||
-            'Virtual sets, AR graphics and full show packages — built by real-time designers, verified on the engines you run.'}
-        </p>
-        <div className="hero-ctas">
-          {sections?.marketplace ? (
-            <Link className="btn btn-primary" href="/marketplace">{settings?.heroCtaLabel || 'Browse the marketplace'}</Link>
-          ) : (
-            <span className="btn btn-primary">Launching soon</span>
-          )}
-        </div>
-      </section>
-
-      {stats.length > 0 && (
-        <section className="container">
-          <div className="stat-row" style={{ marginTop: 8 }}>
-            {stats.map((s: any, i: number) => (
-              <div key={i} className="stat" style={{ textAlign: 'center' }}>
-                <div className="num">{s.value}</div>
-                <div className="lbl">{s.label}</div>
-              </div>
-            ))}
+  const sectionRenderers: Record<string, () => React.ReactNode> = {
+    valueProps: () =>
+      valueProps.length > 0 && (
+        <section className="section" key="valueProps">
+          <div className="container">
+            <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
+              {valueProps.map((v: any, i: number) => (
+                <div key={i} className="card-a" style={{ padding: 20 }}>
+                  {v.icon && <div style={{ fontSize: 22, marginBottom: 8 }}>{v.icon}</div>}
+                  <h3 style={{ marginBottom: 6, fontSize: 15 }}>{v.title}</h3>
+                  <p style={{ fontSize: 13.5, color: 'var(--muted)', lineHeight: 1.6 }}>{v.body}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
-      )}
-
-      {sections?.marketplace && assets.docs.length > 0 && (
-        <section className="section">
+      ),
+    featured: () =>
+      sections?.marketplace && assets.docs.length > 0 && (
+        <section className="section" key="featured">
           <div className="container">
             <div className="sec-head">
               <h2>Featured assets</h2>
@@ -112,10 +102,10 @@ export default async function Home() {
             </div>
           </div>
         </section>
-      )}
-
-      {sections?.marketplace && freeAssets.docs.length > 0 && (
-        <section className="section" style={{ background: 'var(--card)', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
+      ),
+    free: () =>
+      sections?.marketplace && freeAssets.docs.length > 0 && (
+        <section className="section" style={{ background: 'var(--card)', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }} key="free">
           <div className="container">
             <div className="sec-head">
               <h2>Free assets</h2>
@@ -140,10 +130,23 @@ export default async function Home() {
             </div>
           </div>
         </section>
-      )}
-
-      {testimonials.length > 0 && (
-        <section className="section">
+      ),
+    stats: () =>
+      stats.length > 0 && (
+        <section className="container" key="stats">
+          <div className="stat-row" style={{ marginTop: 8 }}>
+            {stats.map((s: any, i: number) => (
+              <div key={i} className="stat" style={{ textAlign: 'center' }}>
+                <div className="num">{s.value}</div>
+                <div className="lbl">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ),
+    testimonials: () =>
+      testimonials.length > 0 && (
+        <section className="section" key="testimonials">
           <div className="container">
             <div className="sec-head"><h2>What people say</h2></div>
             <div className="grid">
@@ -157,7 +160,40 @@ export default async function Home() {
             </div>
           </div>
         </section>
-      )}
+      ),
+  }
+
+  return (
+    <>
+      <SiteNav />
+
+      <section className="hero">
+        {heroVideoUrl ? (
+          <video className="hero-bg" autoPlay muted loop playsInline src={heroVideoUrl} />
+        ) : heroBg?.url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="hero-bg" src={heroBg.url} alt="" />
+        ) : null}
+        <div className="hero-content">
+          <div className="tc">{settings?.heroEyebrow || '● REC — Coming soon'}</div>
+          <h1>
+            <em>{settings?.heroHeadline || 'The home of broadcast design'}</em>
+          </h1>
+          <p>
+            {settings?.heroSubhead ||
+              'Virtual sets, AR graphics and full show packages — built by real-time designers, verified on the engines you run.'}
+          </p>
+          <div className="hero-ctas">
+            {sections?.marketplace ? (
+              <Link className="btn btn-primary" href="/marketplace">{settings?.heroCtaLabel || 'Browse the marketplace'}</Link>
+            ) : (
+              <span className="btn btn-primary">Launching soon</span>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {order.map((key: string) => sectionRenderers[key]?.())}
 
       <SiteFooter />
     </>

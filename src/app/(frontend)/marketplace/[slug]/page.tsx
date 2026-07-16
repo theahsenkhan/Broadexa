@@ -57,7 +57,7 @@ export default async function ListingPage({ params }: { params: Promise<{ slug: 
             <div className="listing-meta">
               {typeof asset.engine === 'object' && <span className="tag">{asset.engine?.name}</span>}
               {typeof asset.category === 'object' && <span className="tag">{asset.category?.name}</span>}
-              {Array.isArray(asset.genre) && asset.genre.map((g: string) => <span key={g} className="tag">{g}</span>)}
+              {Array.isArray(asset.genre) && asset.genre.map((g: any) => <span key={g.id || g} className="tag">{typeof g === 'object' ? g.name : g}</span>)}
               {asset.verified && <span className="badge verified">✓ Verified</span>}
               {asset.awardWinner && <span className="badge verified">🏆 Award winner</span>}
             </div>

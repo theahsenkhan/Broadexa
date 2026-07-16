@@ -12,9 +12,10 @@ export default async function NewAssetPage() {
   if (user.role !== 'designer' && user.role !== 'admin') redirect('/dashboard')
 
   const payload = await getPayload({ config })
-  const [engines, categories] = await Promise.all([
+  const [engines, categories, genres] = await Promise.all([
     payload.find({ collection: 'engines', limit: 100, sort: 'name' }),
     payload.find({ collection: 'categories', limit: 100, sort: 'name' }),
+    payload.find({ collection: 'genres', limit: 100, sort: 'name' }),
   ])
 
   return (
@@ -24,6 +25,7 @@ export default async function NewAssetPage() {
         userId={String(user.id)}
         engines={engines.docs.map((e: any) => ({ id: e.id, name: e.name }))}
         categories={categories.docs.map((c: any) => ({ id: c.id, name: c.name }))}
+        genres={genres.docs.map((g: any) => ({ id: g.id, name: g.name }))}
       />
     </div>
   )

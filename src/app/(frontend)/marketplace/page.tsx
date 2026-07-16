@@ -25,9 +25,10 @@ export default async function MarketplacePage({
   const sp = await searchParams
   const payload = await getPayload({ config })
 
-  const [engines, categories] = await Promise.all([
+  const [engines, categories, genres] = await Promise.all([
     payload.find({ collection: 'engines', limit: 100, sort: 'name' }),
     payload.find({ collection: 'categories', limit: 100, sort: 'name' }),
+    payload.find({ collection: 'genres', limit: 100, sort: 'name' }),
   ])
 
   const where: Where = { status: { equals: 'published' } }
@@ -41,7 +42,10 @@ export default async function MarketplacePage({
     const cat = categories.docs.find((c) => c.slug === sp.category)
     if (cat) and.push({ category: { equals: cat.id } })
   }
-  if (sp.genre) and.push({ genre: { contains: sp.genre } })
+  if (sp.genre) {
+    const gen = genres.docs.find((g) => g.slug === sp.genre)
+    if (gen) and.push({ genre: { equals: gen.id } })
+  }
   if (sp.verified === '1') and.push({ verified: { equals: true } })
   if (sp.free === '1') and.push({ isFree: { equals: true } })
   if (sp.min) and.push({ price: { greater_than_equal: Number(sp.min) } })
@@ -55,8 +59,6 @@ export default async function MarketplacePage({
     sort: '-createdAt',
     depth: 1,
   })
-
-  const genres = ['news', 'sports', 'weather', 'election', 'talk', 'other']
 
   const buildHref = (patch: Partial<SearchParams>) => {
     const next = { ...sp, ...patch }
@@ -108,13 +110,13 @@ export default async function MarketplacePage({
             <div className="filter-group">
               <h4>Genre</h4>
               <div className="filter-row">
-                {genres.map((g) => (
+                {genres.docs.map((g) => (
                   <Link
-                    key={g}
-                    href={buildHref({ genre: sp.genre === g ? undefined : g })}
-                    className={`chip-toggle ${sp.genre === g ? 'active' : ''}`}
+                    key={g.id}
+                    href={buildHref({ genre: sp.genre === g.slug ? undefined : g.slug })}
+                    className={`chip-toggle ${sp.genre === g.slug ? 'active' : ''}`}
                   >
-                    {g}
+                    {g.name}
                   </Link>
                 ))}
               </div>

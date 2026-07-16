@@ -12,6 +12,7 @@ export const Posts: CollectionConfig = {
     { name: 'slug', type: 'text', required: true, unique: true },
     { name: 'excerpt', type: 'textarea' },
     { name: 'cover', type: 'upload', relationTo: 'media' },
+    { name: 'categories', type: 'relationship', relationTo: 'blog-categories', hasMany: true },
     { name: 'content', type: 'richText', editor: lexicalEditor() },
     { name: 'publishedAt', type: 'date' },
     { name: 'status', type: 'select', defaultValue: 'draft', options: ['draft', 'published'], admin: { position: 'sidebar' } },

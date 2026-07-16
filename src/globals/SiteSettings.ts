@@ -47,7 +47,22 @@ export const SiteSettings: GlobalConfig = {
             { name: 'heroHeadline', type: 'text', defaultValue: 'The home of broadcast design', label: 'Headline (the last word wraps in gradient style automatically if it\'s on its own line in your head — keep it short)' },
             { name: 'heroSubhead', type: 'textarea', defaultValue: 'Virtual sets, AR graphics and full show packages — built by real-time designers, verified on the engines you run.' },
             { name: 'heroCtaLabel', type: 'text', defaultValue: 'Browse the marketplace' },
+            { name: 'heroBackgroundImage', type: 'upload', relationTo: 'media', label: 'Hero background image (optional — sits behind the gradient)' },
+            { name: 'heroBackgroundVideoUrl', type: 'text', label: 'Hero background video URL (optional — takes priority over the image if both are set)' },
             { name: 'showFreeSpotlight', type: 'checkbox', defaultValue: true, label: 'Show a "Free assets" spotlight when free assets exist' },
+            {
+              name: 'valueProps', type: 'array', label: 'Value props row (icon + short blurb, leave empty to hide)',
+              defaultValue: [
+                { icon: '💰', title: '80% commission', body: 'You keep 80% of every sale. We take 20% — nothing else.' },
+                { icon: '✓', title: 'Verified on-engine', body: 'Admin-checked recordings confirm every listing matches what it claims.' },
+                { icon: '📅', title: 'Monthly payouts', body: 'Paid directly through Stripe Connect, automatically, every month.' },
+              ],
+              fields: [
+                { name: 'icon', type: 'text', label: 'Icon (emoji or short label)' },
+                { name: 'title', type: 'text', required: true },
+                { name: 'body', type: 'textarea', required: true },
+              ],
+            },
             {
               name: 'stats', type: 'array', label: 'Stats row (leave empty to hide)',
               fields: [
@@ -61,6 +76,17 @@ export const SiteSettings: GlobalConfig = {
                 { name: 'quote', type: 'textarea', required: true },
                 { name: 'name', type: 'text', required: true },
                 { name: 'role', type: 'text', label: 'Role / studio' },
+              ],
+            },
+            {
+              name: 'sectionOrder', type: 'select', hasMany: true, label: 'Homepage section order (drag to reorder — sections not selected are hidden)',
+              defaultValue: ['valueProps', 'featured', 'free', 'stats', 'testimonials'],
+              options: [
+                { label: 'Value props', value: 'valueProps' },
+                { label: 'Featured assets', value: 'featured' },
+                { label: 'Free assets', value: 'free' },
+                { label: 'Stats', value: 'stats' },
+                { label: 'Testimonials', value: 'testimonials' },
               ],
             },
           ],

@@ -24,6 +24,11 @@ export default async function JobsPage() {
           <h1>Broadcast design jobs</h1>
         </div>
 
+        <div className="results-head">
+          <span>{jobs.totalDocs} open role{jobs.totalDocs === 1 ? '' : 's'}</span>
+          <Link className="btn btn-primary" href="/jobs/post">Post a job</Link>
+        </div>
+
         {jobs.docs.length === 0 ? (
           <div className="empty" style={{ marginBottom: 60 }}>No open roles right now.</div>
         ) : (

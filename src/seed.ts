@@ -24,6 +24,21 @@ const categories = [
   { name: 'Full Show Package', slug: 'full-show-package' },
 ]
 
+const genres = [
+  { name: 'News', slug: 'news' },
+  { name: 'Sports', slug: 'sports' },
+  { name: 'Weather', slug: 'weather' },
+  { name: 'Election', slug: 'election' },
+  { name: 'Talk', slug: 'talk' },
+  { name: 'Other', slug: 'other' },
+]
+
+const blogCategories = [
+  { name: 'Product', slug: 'product' },
+  { name: 'Design', slug: 'design' },
+  { name: 'Industry', slug: 'industry' },
+]
+
 const faqItems = [
   {
     question: 'What is Broadexa?',
@@ -67,7 +82,7 @@ const faqItems = [
   },
 ].map((f, i) => ({ ...f, order: i }))
 
-async function seedCollection(payload: Awaited<ReturnType<typeof getPayload>>, slug: 'engines' | 'categories', items: { name: string; slug: string; shortLabel?: string }[]) {
+async function seedCollection(payload: Awaited<ReturnType<typeof getPayload>>, slug: 'engines' | 'categories' | 'genres' | 'blog-categories', items: { name: string; slug: string; shortLabel?: string }[]) {
   for (const item of items) {
     const existing = await payload.find({
       collection: slug,
@@ -103,6 +118,8 @@ async function seed() {
   const payload = await getPayload({ config })
   await seedCollection(payload, 'engines', engines)
   await seedCollection(payload, 'categories', categories)
+  await seedCollection(payload, 'genres', genres)
+  await seedCollection(payload, 'blog-categories', blogCategories)
   await seedFaqItems(payload)
   console.log('Seed complete.')
   process.exit(0)

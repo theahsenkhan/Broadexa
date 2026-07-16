@@ -11,12 +11,15 @@ import { Media } from './collections/Media'
 import { AssetFiles } from './collections/AssetFiles'
 import { Engines } from './collections/Engines'
 import { Categories } from './collections/Categories'
+import { Genres } from './collections/Genres'
 import { Assets } from './collections/Assets'
 import { Orders } from './collections/Orders'
 import { Projects } from './collections/Projects'
 import { Bids } from './collections/Bids'
 import { Posts } from './collections/Posts'
+import { BlogCategories } from './collections/BlogCategories'
 import { Jobs } from './collections/Jobs'
+import { JobApplications } from './collections/JobApplications'
 import { AwardEntries } from './collections/AwardEntries'
 import { Competitions } from './collections/Competitions'
 import { FaqItems } from './collections/FaqItems'
@@ -36,7 +39,10 @@ export default buildConfig({
     user: Users.slug,
     meta: { titleSuffix: '— Broadexa Admin' },
   },
-  collections: [Users, Media, AssetFiles, Assets, Engines, Categories, Orders, Projects, Bids, Posts, Jobs, AwardEntries, Competitions, FaqItems],
+  collections: [
+    Users, Media, AssetFiles, Assets, Engines, Categories, Genres, Orders, Projects, Bids,
+    Posts, BlogCategories, Jobs, JobApplications, AwardEntries, Competitions, FaqItems,
+  ],
   globals: [SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

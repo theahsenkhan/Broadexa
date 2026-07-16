@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 
 type Opt = { id: string; name: string }
 
-const GENRES = ['news', 'sports', 'weather', 'election', 'talk', 'other']
 const STEPS = ['Basics', 'Pricing', 'Includes', 'Media', 'Review']
 
 function slugify(s: string) {
@@ -16,7 +15,7 @@ function slugify(s: string) {
     .replace(/(^-|-$)/g, '')
 }
 
-export function UploadWizard({ userId, engines, categories }: { userId: string; engines: Opt[]; categories: Opt[] }) {
+export function UploadWizard({ userId, engines, categories, genres }: { userId: string; engines: Opt[]; categories: Opt[]; genres: Opt[] }) {
   const router = useRouter()
   const [step, setStep] = useState(0)
   const [error, setError] = useState('')
@@ -180,9 +179,9 @@ export function UploadWizard({ userId, engines, categories }: { userId: string; 
           <div className="field">
             <label>Genre</label>
             <div className="filter-row">
-              {GENRES.map((g) => (
-                <button type="button" key={g} className={`chip-toggle ${genre.includes(g) ? 'active' : ''}`} onClick={() => toggleGenre(g)}>
-                  {g}
+              {genres.map((g) => (
+                <button type="button" key={g.id} className={`chip-toggle ${genre.includes(g.id) ? 'active' : ''}`} onClick={() => toggleGenre(g.id)}>
+                  {g.name}
                 </button>
               ))}
             </div>
@@ -300,7 +299,7 @@ export function UploadWizard({ userId, engines, categories }: { userId: string; 
               <tr><td>Title</td><td>{title}</td></tr>
               <tr><td>Price</td><td>{isFree ? 'Free' : `$${price || 0}`}</td></tr>
               <tr><td>Exclusive buyout</td><td>{exclusiveAvailable ? `$${exclusivePrice || 0}` : 'Not offered'}</td></tr>
-              <tr><td>Genre</td><td>{genre.join(', ') || '—'}</td></tr>
+              <tr><td>Genre</td><td>{genres.filter((g) => genre.includes(g.id)).map((g) => g.name).join(', ') || '—'}</td></tr>
               <tr><td>Images</td><td>{galleryFiles.length}</td></tr>
               <tr><td>Verified badge eligible</td><td>{onEngineRecordingUrl ? 'Yes — recording supplied' : 'No — add a recording'}</td></tr>
             </tbody>

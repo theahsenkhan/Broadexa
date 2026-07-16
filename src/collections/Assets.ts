@@ -23,7 +23,7 @@ export const Assets: CollectionConfig = {
     { name: 'engine', type: 'relationship', relationTo: 'engines', required: true },
     { name: 'engineVersionBuilt', type: 'text', required: true, label: 'Built in (engine version)' },
     { name: 'engineVersionMin', type: 'text', label: 'Opens in (lowest version)' },
-    { name: 'genre', type: 'select', hasMany: true, options: ['news', 'sports', 'weather', 'election', 'talk', 'other'] },
+    { name: 'genre', type: 'relationship', relationTo: 'genres', hasMany: true },
     { name: 'description', type: 'textarea', required: true },
 
     // ── Pricing (designer sets their own — locked decision) ──

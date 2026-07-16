@@ -14,6 +14,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     collection: 'posts',
     where: { slug: { equals: slug }, status: { equals: 'published' } },
     limit: 1,
+    depth: 1,
   })
   const post: any = result.docs[0]
   if (!post) notFound()
@@ -24,6 +25,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <div className="form-wide">
         <div className="eyebrow">{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : ''}</div>
         <h1 className="listing-title">{post.title}</h1>
+        {Array.isArray(post.categories) && post.categories.length > 0 && (
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 18 }}>
+            {post.categories.map((c: any) => (
+              <span key={c.id || c} className="tag">{typeof c === 'object' ? c.name : c}</span>
+            ))}
+          </div>
+        )}
         <div style={{ fontSize: 15, lineHeight: 1.75, color: 'var(--ink-soft)' }}>
           {post.content && <RichText data={post.content} />}
         </div>
