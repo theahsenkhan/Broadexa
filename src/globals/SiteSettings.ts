@@ -49,7 +49,28 @@ export const SiteSettings: GlobalConfig = {
             { name: 'heroCtaLabel', type: 'text', defaultValue: 'Browse the marketplace' },
             { name: 'heroBackgroundImage', type: 'upload', relationTo: 'media', label: 'Hero background image (optional — sits behind the gradient)' },
             { name: 'heroBackgroundVideoUrl', type: 'text', label: 'Hero background video URL (optional — takes priority over the image if both are set)' },
+            { name: 'showEngineStrip', type: 'checkbox', defaultValue: true, label: 'Show supported-engines strip under the hero' },
             { name: 'showFreeSpotlight', type: 'checkbox', defaultValue: true, label: 'Show a "Free assets" spotlight when free assets exist' },
+            {
+              name: 'howItWorksBuyerSteps', type: 'array', label: '"How it works" — steps for buyers',
+              defaultValue: [
+                { title: '1. Browse', body: 'Search the marketplace by engine, genre and price. No account needed to look around.' },
+                { title: '2. Buy or bid', body: 'Buy instantly, request an invoice, or bid on an exclusive buyout — you choose the licence.' },
+                { title: '3. Download', body: 'Get the files straight away through your dashboard, with support from the designer if you need it.' },
+              ],
+              fields: [
+                { name: 'title', type: 'text', required: true },
+                { name: 'body', type: 'textarea', required: true },
+              ],
+            },
+            { name: 'verifiedHeading', type: 'text', defaultValue: 'What "Verified" means', label: 'Verified-badge explainer heading' },
+            {
+              name: 'verifiedBody', type: 'textarea', label: 'Verified-badge explainer body',
+              defaultValue: 'A Verified badge means the designer supplied a recording of the asset running live on the engine, and our team checked it matches the listing. It\'s not a quality score — it\'s confirmation the listing is what it claims to be.',
+            },
+            { name: 'showCompetitionsTeaser', type: 'checkbox', defaultValue: true, label: 'Show a Competitions teaser section (pulls the latest open competition)' },
+            { name: 'ctaBuyLabel', type: 'text', defaultValue: 'Browse the marketplace', label: 'Closing CTA — buy button label' },
+            { name: 'ctaSellLabel', type: 'text', defaultValue: 'Start selling', label: 'Closing CTA — sell button label' },
             {
               name: 'valueProps', type: 'array', label: 'Value props row (icon + short blurb, leave empty to hide)',
               defaultValue: [
@@ -80,11 +101,13 @@ export const SiteSettings: GlobalConfig = {
             },
             {
               name: 'sectionOrder', type: 'select', hasMany: true, label: 'Homepage section order (drag to reorder — sections not selected are hidden)',
-              defaultValue: ['valueProps', 'featured', 'free', 'stats', 'testimonials'],
+              defaultValue: ['howItWorks', 'valueProps', 'featured', 'verifiedExplainer', 'competitionsTeaser', 'stats', 'testimonials'],
               options: [
+                { label: 'How it works', value: 'howItWorks' },
                 { label: 'Value props', value: 'valueProps' },
-                { label: 'Featured assets', value: 'featured' },
-                { label: 'Free assets', value: 'free' },
+                { label: 'Featured assets (incl. free tab)', value: 'featured' },
+                { label: 'Verified badge explainer', value: 'verifiedExplainer' },
+                { label: 'Competitions teaser', value: 'competitionsTeaser' },
                 { label: 'Stats', value: 'stats' },
                 { label: 'Testimonials', value: 'testimonials' },
               ],

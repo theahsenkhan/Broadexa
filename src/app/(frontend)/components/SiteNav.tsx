@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { getSessionUser } from '@/lib/session'
 import { CartBadge } from './CartBadge'
+import { MobileNavToggle } from './MobileNavToggle'
 
 export async function SiteNav() {
   const settings = await getPayload({ config })
@@ -12,6 +13,33 @@ export async function SiteNav() {
   const extraLinks = settings?.extraNavLinks || []
   const logo: any = settings?.logo
   const user = await getSessionUser().catch(() => null)
+
+  const navLinks = (
+    <>
+      {sections?.marketplace && <Link href="/marketplace">Marketplace</Link>}
+      {sections?.services && <Link href="/services">Services</Link>}
+      {sections?.awards && <Link href="/awards">Awards</Link>}
+      {sections?.competitions && <Link href="/competitions">Competitions</Link>}
+      {sections?.blog && <Link href="/blog">Blog</Link>}
+      {sections?.jobs && <Link href="/jobs">Jobs</Link>}
+      {extraLinks.map((l: any, i: number) => (
+        <a key={i} href={l.url}>{l.label}</a>
+      ))}
+    </>
+  )
+
+  const ctaLinks = (
+    <>
+      {user ? (
+        <Link className="btn btn-ghost" href="/dashboard">Dashboard</Link>
+      ) : (
+        <Link className="btn btn-ghost" href="/login">Sign in</Link>
+      )}
+      {sections?.sellPage && !user && (
+        <Link className="btn btn-primary" href="/sell">Sell your scenes</Link>
+      )}
+    </>
+  )
 
   return (
     <div className="container">
@@ -24,28 +52,18 @@ export async function SiteNav() {
             'BROADEXA'
           )}
         </Link>
-        <div className="navlinks">
-          {sections?.marketplace && <Link href="/marketplace">Marketplace</Link>}
-          {sections?.services && <Link href="/services">Services</Link>}
-          {sections?.awards && <Link href="/awards">Awards</Link>}
-          {sections?.competitions && <Link href="/competitions">Competitions</Link>}
-          {sections?.blog && <Link href="/blog">Blog</Link>}
-          {sections?.jobs && <Link href="/jobs">Jobs</Link>}
-          {extraLinks.map((l: any, i: number) => (
-            <a key={i} href={l.url}>{l.label}</a>
-          ))}
-        </div>
-        <div className="nav-cta">
+        <div className="navlinks navlinks-desktop">{navLinks}</div>
+        <div className="nav-cta nav-cta-desktop">
           <CartBadge />
-          {user ? (
-            <Link className="btn btn-ghost" href="/dashboard">Dashboard</Link>
-          ) : (
-            <Link className="btn btn-ghost" href="/login">Sign in</Link>
-          )}
-          {sections?.sellPage && !user && (
-            <Link className="btn btn-primary" href="/sell">Sell your scenes</Link>
-          )}
+          {ctaLinks}
         </div>
+        <MobileNavToggle>
+          <div className="nav-mobile-links">{navLinks}</div>
+          <div className="nav-mobile-cta">
+            <CartBadge />
+            {ctaLinks}
+          </div>
+        </MobileNavToggle>
       </nav>
     </div>
   )
