@@ -1,6 +1,7 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { cache } from 'react'
 import type { Metadata } from 'next'
 import { SiteNav } from '../../components/SiteNav'
@@ -39,6 +40,12 @@ export default async function ListingPage({ params }: { params: Promise<{ slug: 
   const user = await getSessionUser().catch(() => null)
   const designer = typeof asset.designer === 'object' ? asset.designer : null
 
+  const payload = await getPayload({ config })
+  const reviews = await payload.find({ collection: 'reviews', where: { asset: { equals: asset.id } }, sort: '-createdAt', limit: 50, depth: 1 })
+  const avgRating = reviews.docs.length > 0
+    ? (reviews.docs.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.docs.length).toFixed(1)
+    : null
+
   return (
     <>
       <SiteNav />
@@ -60,6 +67,7 @@ export default async function ListingPage({ params }: { params: Promise<{ slug: 
               {Array.isArray(asset.genre) && asset.genre.map((g: any) => <span key={g.id || g} className="tag">{typeof g === 'object' ? g.name : g}</span>)}
               {asset.verified && <span className="badge verified">✓ Verified</span>}
               {asset.awardWinner && <span className="badge verified">🏆 Award winner</span>}
+              {avgRating && <span className="tag">★ {avgRating} ({reviews.docs.length})</span>}
             </div>
 
             <p className="listing-desc">{asset.description}</p>
@@ -88,6 +96,20 @@ export default async function ListingPage({ params }: { params: Promise<{ slug: 
                 </div>
               </>
             )}
+
+            {reviews.docs.length > 0 && (
+              <>
+                <h4 style={{ fontSize: 13, fontWeight: 600, marginBottom: 10 }}>Reviews</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 28 }}>
+                  {reviews.docs.map((r: any) => (
+                    <div key={r.id} style={{ borderBottom: '1px solid var(--line)', paddingBottom: 12 }}>
+                      <div style={{ fontSize: 13, color: 'var(--amber)' }}>{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</div>
+                      {r.comment && <p style={{ fontSize: 13.5, color: 'var(--ink-soft)', marginTop: 4 }}>{r.comment}</p>}
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
 
           <BuyBox asset={asset} isLoggedIn={Boolean(user)} />
@@ -95,13 +117,13 @@ export default async function ListingPage({ params }: { params: Promise<{ slug: 
 
         {designer && (
           <div style={{ paddingBottom: 60 }}>
-            <div className="designer-card">
+            <Link href={`/designer/${designer.id}`} className="designer-card">
               <div className="avatar" />
               <div>
                 <div className="name">{designer.studioName || designer.name}</div>
                 <div className="sub">{designer.verifiedDesigner ? 'Verified designer' : 'Designer'}</div>
               </div>
-            </div>
+            </Link>
           </div>
         )}
       </div>

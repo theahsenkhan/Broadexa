@@ -37,5 +37,6 @@ export const Users: CollectionConfig = {
     },
     { name: 'country', type: 'text' },
     { name: 'stripeAccountId', type: 'text', admin: { description: 'Stripe Connect (Phase 3)', readOnly: true } },
+    { name: 'acceptedTermsAt', type: 'date', admin: { readOnly: true, description: 'Set automatically at signup.' } },
   ],
 }

@@ -8,6 +8,7 @@ import type { Where } from 'payload'
 export const dynamic = 'force-dynamic'
 
 type SearchParams = {
+  q?: string
   engine?: string
   category?: string
   genre?: string
@@ -46,6 +47,14 @@ export default async function MarketplacePage({
     const gen = genres.docs.find((g) => g.slug === sp.genre)
     if (gen) and.push({ genre: { equals: gen.id } })
   }
+  if (sp.q) {
+    and.push({
+      or: [
+        { title: { contains: sp.q } },
+        { description: { contains: sp.q } },
+      ],
+    })
+  }
   if (sp.verified === '1') and.push({ verified: { equals: true } })
   if (sp.free === '1') and.push({ isFree: { equals: true } })
   if (sp.min) and.push({ price: { greater_than_equal: Number(sp.min) } })
@@ -80,6 +89,18 @@ export default async function MarketplacePage({
           <h1>Broadcast-ready assets</h1>
           <p>Virtual sets, AR graphics and show packages — built by real-time designers, verified on the engines you run.</p>
         </div>
+
+        <form action="/marketplace" method="get" className="search-row">
+          {sp.engine && <input type="hidden" name="engine" value={sp.engine} />}
+          {sp.category && <input type="hidden" name="category" value={sp.category} />}
+          {sp.genre && <input type="hidden" name="genre" value={sp.genre} />}
+          {sp.min && <input type="hidden" name="min" value={sp.min} />}
+          {sp.max && <input type="hidden" name="max" value={sp.max} />}
+          {sp.verified && <input type="hidden" name="verified" value={sp.verified} />}
+          {sp.free && <input type="hidden" name="free" value={sp.free} />}
+          <input type="search" name="q" defaultValue={sp.q || ''} placeholder="Search assets by name or description…" />
+          <button type="submit" className="btn btn-dark">Search</button>
+        </form>
 
         <div className="mkt-layout">
           <aside className="filters">

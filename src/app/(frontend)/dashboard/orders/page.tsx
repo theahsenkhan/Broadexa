@@ -1,5 +1,6 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import Link from 'next/link'
 import { getSessionUser } from '@/lib/session'
 import { DownloadButton } from './DownloadButton'
 
@@ -42,6 +43,7 @@ export default async function OrdersPage() {
               <th>Amount</th>
               <th>Status</th>
               <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -52,6 +54,7 @@ export default async function OrdersPage() {
                 <td>${Number(o.amount || 0).toLocaleString()}</td>
                 <td><span className={`status-pill ${statusClass[o.status] || ''}`}>{o.status}</span></td>
                 <td>{(o.status === 'paid' || o.status === 'delivered') && <DownloadButton orderId={o.id} />}</td>
+                <td><Link href={`/dashboard/orders/${o.id}`} style={{ color: 'var(--violet)', fontSize: 12.5, fontWeight: 600 }}>View</Link></td>
               </tr>
             ))}
           </tbody>

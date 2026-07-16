@@ -23,6 +23,8 @@ import { JobApplications } from './collections/JobApplications'
 import { AwardEntries } from './collections/AwardEntries'
 import { Competitions } from './collections/Competitions'
 import { FaqItems } from './collections/FaqItems'
+import { Messages } from './collections/Messages'
+import { Reviews } from './collections/Reviews'
 import { SiteSettings } from './globals/SiteSettings'
 import { migrations } from './migrations'
 
@@ -42,6 +44,7 @@ export default buildConfig({
   collections: [
     Users, Media, AssetFiles, Assets, Engines, Categories, Genres, Orders, Projects, Bids,
     Posts, BlogCategories, Jobs, JobApplications, AwardEntries, Competitions, FaqItems,
+    Messages, Reviews,
   ],
   globals: [SiteSettings],
   editor: lexicalEditor(),

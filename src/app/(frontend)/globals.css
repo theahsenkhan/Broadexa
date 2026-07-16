@@ -81,6 +81,8 @@ a{text-decoration:none;color:inherit}
 .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--violet);font-weight:500}
 
 /* ── Marketplace layout ── */
+.search-row{display:flex;gap:10px;margin-bottom:24px}
+.search-row input[type=search]{flex:1;font-size:14px;padding:11px 14px;border:1.5px solid var(--line-strong);border-radius:9px;background:#fff;color:var(--ink)}
 .mkt-layout{display:grid;grid-template-columns:220px 1fr;gap:32px;align-items:start;padding-bottom:64px}
 @media (max-width:860px){.mkt-layout{grid-template-columns:1fr}}
 .filters{position:sticky;top:20px;display:flex;flex-direction:column;gap:22px}

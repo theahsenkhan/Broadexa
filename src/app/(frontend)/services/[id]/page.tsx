@@ -6,6 +6,7 @@ import type { Metadata } from 'next'
 import { SiteNav } from '../../components/SiteNav'
 import { SiteFooter } from '../../components/SiteFooter'
 import { getSessionUser } from '@/lib/session'
+import Link from 'next/link'
 import { BidForm } from './BidForm'
 import { BidRow } from './BidRow'
 
@@ -50,6 +51,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
     bids = result.docs
     if (!isOwner) myBid = bids.find((b) => (typeof b.designer === 'object' ? b.designer.id : b.designer) === user.id)
   }
+  const acceptedBid = bids.find((b) => b.status === 'accepted')
 
   return (
     <>
@@ -98,11 +100,19 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             {!user ? (
               <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>Sign in as a designer to submit a bid.</p>
             ) : isOwner ? (
-              <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>This is your project. Bids are listed to the left.</p>
+              <div>
+                <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>This is your project. Bids are listed to the left.</p>
+                {acceptedBid && (
+                  <Link className="btn btn-primary btn-block" style={{ marginTop: 12 }} href={`/messages/bid/${acceptedBid.id}`}>Message hired designer</Link>
+                )}
+              </div>
             ) : myBid ? (
               <div>
                 <h5 style={{ marginBottom: 6 }}>Your bid</h5>
                 <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>${myBid.amount} · {myBid.timelineDays || '—'} days · <span className="status-pill">{myBid.status}</span></p>
+                {myBid.status === 'accepted' && (
+                  <Link className="btn btn-primary btn-block" style={{ marginTop: 12 }} href={`/messages/bid/${myBid.id}`}>Message client</Link>
+                )}
               </div>
             ) : isDesigner ? (
               <BidForm projectId={project.id} />
