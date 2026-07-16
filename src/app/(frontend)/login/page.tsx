@@ -58,7 +58,11 @@ function LoginForm() {
         </button>
       </form>
 
-      <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 18, textAlign: 'center' }}>
+      <p style={{ fontSize: 12.5, marginTop: 12, textAlign: 'center' }}>
+        <Link href="/forgot-password" style={{ color: 'var(--muted)' }}>Forgot password?</Link>
+      </p>
+
+      <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 10, textAlign: 'center' }}>
         New to Broadexa? <Link href={`/signup?next=${encodeURIComponent(next)}`} style={{ color: 'var(--violet)', fontWeight: 600 }}>Create an account</Link>
       </p>
     </div>

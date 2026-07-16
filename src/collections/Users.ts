@@ -7,6 +7,11 @@ export const Users: CollectionConfig = {
   access: {
     read: () => true,
     create: () => true,
+    // No collection-level update was set before, which defaults to "any
+    // logged-in user" — field-level access locked down role/badges, but
+    // left every other field (name, bio, etc.) editable by any authenticated
+    // user on any account, not just their own.
+    update: ({ req, id }) => req.user?.role === 'admin' || String(req.user?.id) === String(id),
   },
   fields: [
     { name: 'name', type: 'text', required: true },
@@ -39,4 +44,12 @@ export const Users: CollectionConfig = {
     { name: 'stripeAccountId', type: 'text', admin: { description: 'Stripe Connect (Phase 3)', readOnly: true } },
     { name: 'acceptedTermsAt', type: 'date', admin: { readOnly: true, description: 'Set automatically at signup.' } },
   ],
+  hooks: {
+    beforeChange: [
+      ({ data, operation }) => {
+        if (operation === 'create') data.acceptedTermsAt = new Date().toISOString()
+        return data
+      },
+    ],
+  },
 }

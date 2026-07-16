@@ -14,12 +14,17 @@ function SignupForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [role, setRole] = useState(defaultRole)
+  const [agreed, setAgreed] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
+    if (!agreed) {
+      setError('You need to agree to the Terms of Service to create an account.')
+      return
+    }
     setLoading(true)
     try {
       const createRes = await fetch('/api/users', {
@@ -76,7 +81,11 @@ function SignupForm() {
           <input required type="password" minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} />
           <span className="field-hint">At least 8 characters.</span>
         </div>
-        <button className="btn btn-primary btn-block" disabled={loading} type="submit">
+        <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 12.5, color: 'var(--ink-soft)', marginBottom: 16 }}>
+          <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} style={{ width: 'auto', marginTop: 2 }} />
+          I agree to the <Link href="/terms" target="_blank" style={{ color: 'var(--violet)' }}>Terms of Service</Link> and <Link href="/privacy" target="_blank" style={{ color: 'var(--violet)' }}>Privacy Policy</Link>.
+        </label>
+        <button className="btn btn-primary btn-block" disabled={loading || !agreed} type="submit">
           {loading ? 'Creating account…' : 'Create account'}
         </button>
       </form>
