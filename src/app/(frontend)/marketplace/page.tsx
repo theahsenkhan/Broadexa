@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { SiteNav } from '../components/SiteNav'
 import { SiteFooter } from '../components/SiteFooter'
+import { Reveal } from '../components/Reveal'
 import type { Where } from 'payload'
 
 export const dynamic = 'force-dynamic'
@@ -164,23 +165,25 @@ export default async function MarketplacePage({
             {assets.docs.length === 0 ? (
               <div className="empty">No assets match these filters yet.</div>
             ) : (
-              <div className="grid">
-                {assets.docs.map((a: any) => (
-                  <Link key={a.id} href={`/marketplace/${a.slug}`} className="card-a">
-                    <div className="thumb" />
-                    <div className="card-body">
-                      <h3>{a.title}</h3>
-                      <div className="byline">
-                        {typeof a.designer === 'object' ? a.designer?.studioName || a.designer?.name : ''}
+              <Reveal>
+                <div className="grid">
+                  {assets.docs.map((a: any) => (
+                    <Link key={a.id} href={`/marketplace/${a.slug}`} className="card-a">
+                      <div className="thumb" />
+                      <div className="card-body">
+                        <h3>{a.title}</h3>
+                        <div className="byline">
+                          {typeof a.designer === 'object' ? a.designer?.studioName || a.designer?.name : ''}
+                        </div>
+                        <div className="card-foot">
+                          <span className="price">{a.isFree ? 'Free' : `$${Number(a.price || 0).toLocaleString()}`}</span>
+                          {a.verified && <span className="badge verified">✓ Verified</span>}
+                        </div>
                       </div>
-                      <div className="card-foot">
-                        <span className="price">{a.isFree ? 'Free' : `$${Number(a.price || 0).toLocaleString()}`}</span>
-                        {a.verified && <span className="badge verified">✓ Verified</span>}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+                    </Link>
+                  ))}
+                </div>
+              </Reveal>
             )}
           </div>
         </div>

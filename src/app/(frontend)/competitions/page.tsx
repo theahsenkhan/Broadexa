@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { SiteNav } from '../components/SiteNav'
 import { SiteFooter } from '../components/SiteFooter'
+import { Reveal } from '../components/Reveal'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,25 +34,27 @@ export default async function CompetitionsPage() {
         </div>
 
         {competitions.docs.length === 0 ? (
-          <div className="empty" style={{ marginBottom: 60 }}>No competitions running right now.</div>
+          <div className="empty list-pad">No competitions running right now.</div>
         ) : (
-          <div className="grid" style={{ paddingBottom: 60 }}>
-            {competitions.docs.map((c: any) => (
-              <Link key={c.id} href={`/competitions/${c.slug}`} className="card-a">
-                <div className="thumb" />
-                <div className="card-body">
-                  <h3>{c.title}</h3>
-                  <div className="byline">
-                    {c.deadline ? `Deadline ${new Date(c.deadline).toLocaleDateString()}` : 'No deadline set'}
+          <Reveal>
+            <div className="grid list-pad">
+              {competitions.docs.map((c: any) => (
+                <Link key={c.id} href={`/competitions/${c.slug}`} className="card-a">
+                  <div className="thumb" />
+                  <div className="card-body">
+                    <h3>{c.title}</h3>
+                    <div className="byline">
+                      {c.deadline ? `Deadline ${new Date(c.deadline).toLocaleDateString()}` : 'No deadline set'}
+                    </div>
+                    <div className="card-foot">
+                      <span className="tag">{statusLabel[c.status] || c.status}</span>
+                      {typeof c.engine === 'object' && c.engine && <span className="tag">{c.engine.name}</span>}
+                    </div>
                   </div>
-                  <div className="card-foot">
-                    <span className="tag">{statusLabel[c.status] || c.status}</span>
-                    {typeof c.engine === 'object' && c.engine && <span className="tag">{c.engine.name}</span>}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                </Link>
+              ))}
+            </div>
+          </Reveal>
         )}
       </div>
       <SiteFooter />

@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { SiteNav } from '../components/SiteNav'
 import { SiteFooter } from '../components/SiteFooter'
+import { Reveal } from '../components/Reveal'
 import type { Where } from 'payload'
 
 export const dynamic = 'force-dynamic'
@@ -52,27 +53,29 @@ export default async function BlogPage({
         )}
 
         {posts.docs.length === 0 ? (
-          <div className="empty" style={{ marginBottom: 60 }}>No posts yet.</div>
+          <div className="empty list-pad">No posts yet.</div>
         ) : (
-          <div className="grid" style={{ paddingBottom: 60 }}>
-            {posts.docs.map((p: any) => (
-              <Link key={p.id} href={`/blog/${p.slug}`} className="card-a">
-                <div className="thumb" />
-                <div className="card-body">
-                  <h3>{p.title}</h3>
-                  <div className="byline">{p.publishedAt ? new Date(p.publishedAt).toLocaleDateString() : ''}</div>
-                  {p.excerpt && <p style={{ fontSize: 12.5, color: 'var(--muted)' }}>{p.excerpt}</p>}
-                  {Array.isArray(p.categories) && p.categories.length > 0 && (
-                    <div style={{ marginTop: 8, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                      {p.categories.map((c: any) => (
-                        <span key={c.id || c} className="tag">{typeof c === 'object' ? c.name : c}</span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </Link>
-            ))}
-          </div>
+          <Reveal>
+            <div className="grid list-pad">
+              {posts.docs.map((p: any) => (
+                <Link key={p.id} href={`/blog/${p.slug}`} className="card-a">
+                  <div className="thumb" />
+                  <div className="card-body">
+                    <h3>{p.title}</h3>
+                    <div className="byline">{p.publishedAt ? new Date(p.publishedAt).toLocaleDateString() : ''}</div>
+                    {p.excerpt && <p style={{ fontSize: 12.5, color: 'var(--muted)' }}>{p.excerpt}</p>}
+                    {Array.isArray(p.categories) && p.categories.length > 0 && (
+                      <div style={{ marginTop: 8, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                        {p.categories.map((c: any) => (
+                          <span key={c.id || c} className="tag">{typeof c === 'object' ? c.name : c}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </Reveal>
         )}
       </div>
       <SiteFooter />

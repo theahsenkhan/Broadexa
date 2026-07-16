@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { SiteNav } from '../components/SiteNav'
 import { SiteFooter } from '../components/SiteFooter'
+import { Reveal } from '../components/Reveal'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,19 +31,21 @@ export default async function JobsPage() {
         </div>
 
         {jobs.docs.length === 0 ? (
-          <div className="empty" style={{ marginBottom: 60 }}>No open roles right now.</div>
+          <div className="empty list-pad">No open roles right now.</div>
         ) : (
-          <div className="grid" style={{ gridTemplateColumns: '1fr', gap: 12, paddingBottom: 60 }}>
-            {jobs.docs.map((j: any) => (
-              <Link key={j.id} href={`/jobs/${j.id}`} className="card-a" style={{ padding: 18 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
-                  <h3 style={{ fontFamily: 'Montserrat', fontSize: 16, fontWeight: 600 }}>{j.title}</h3>
-                  {j.jobType && <span className="tag">{j.jobType}</span>}
-                </div>
-                <div className="byline">{j.company}{j.location ? ` · ${j.location}` : ''}</div>
-              </Link>
-            ))}
-          </div>
+          <Reveal>
+            <div className="list-rows list-pad">
+              {jobs.docs.map((j: any) => (
+                <Link key={j.id} href={`/jobs/${j.id}`} className="card-a">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+                    <h3 style={{ fontFamily: 'Montserrat', fontSize: 16, fontWeight: 600 }}>{j.title}</h3>
+                    {j.jobType && <span className="tag">{j.jobType}</span>}
+                  </div>
+                  <div className="byline">{j.company}{j.location ? ` · ${j.location}` : ''}</div>
+                </Link>
+              ))}
+            </div>
+          </Reveal>
         )}
       </div>
       <SiteFooter />

@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { SiteNav } from '../components/SiteNav'
 import { SiteFooter } from '../components/SiteFooter'
+import { Reveal } from '../components/Reveal'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,20 +33,22 @@ export default async function AwardsPage() {
         </div>
 
         {winners.docs.length === 0 ? (
-          <div className="empty" style={{ marginBottom: 60 }}>No winners announced yet.</div>
+          <div className="empty list-pad">No winners announced yet.</div>
         ) : (
-          <div className="grid" style={{ paddingBottom: 60 }}>
-            {winners.docs.map((w: any) => (
-              <div key={w.id} className="card-a">
-                <div className="thumb" />
-                <div className="card-body">
-                  <h3>{w.title}</h3>
-                  <div className="byline">{typeof w.entrant === 'object' ? w.entrant?.studioName || w.entrant?.name : ''} · {w.year}</div>
-                  <span className="badge verified">🏆 {w.awardCategory}</span>
+          <Reveal>
+            <div className="grid list-pad">
+              {winners.docs.map((w: any) => (
+                <div key={w.id} className="card-a">
+                  <div className="thumb" />
+                  <div className="card-body">
+                    <h3>{w.title}</h3>
+                    <div className="byline">{typeof w.entrant === 'object' ? w.entrant?.studioName || w.entrant?.name : ''} · {w.year}</div>
+                    <span className="badge verified">🏆 {w.awardCategory}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </Reveal>
         )}
       </div>
       <SiteFooter />
