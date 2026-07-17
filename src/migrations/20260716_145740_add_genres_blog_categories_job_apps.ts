@@ -4,8 +4,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
    CREATE TYPE "public"."enum_job_applications_status" AS ENUM('submitted', 'reviewed', 'shortlisted', 'rejected', 'hired');
   CREATE TYPE "public"."enum_site_settings_section_order" AS ENUM('valueProps', 'featured', 'free', 'stats', 'testimonials');
-  ALTER TYPE "public"."enum_jobs_status" ADD VALUE 'pending' BEFORE 'live';
-  ALTER TYPE "public"."enum_jobs_status" ADD VALUE 'rejected';
   CREATE TABLE "genres" (
   	"id" serial PRIMARY KEY NOT NULL,
   	"name" varchar NOT NULL,
@@ -59,6 +57,11 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   ALTER TABLE "assets_genre" DISABLE ROW LEVEL SECURITY;
   DROP TABLE "assets_genre" CASCADE;
+  ALTER TABLE "jobs" ALTER COLUMN "status" DROP DEFAULT;
+  ALTER TABLE "jobs" ALTER COLUMN "status" SET DATA TYPE text;
+  DROP TYPE "public"."enum_jobs_status";
+  CREATE TYPE "public"."enum_jobs_status" AS ENUM('pending', 'live', 'filled', 'expired', 'rejected');
+  ALTER TABLE "jobs" ALTER COLUMN "status" SET DATA TYPE "public"."enum_jobs_status" USING "status"::"public"."enum_jobs_status";
   ALTER TABLE "jobs" ALTER COLUMN "status" SET DEFAULT 'pending';
   ALTER TABLE "jobs" ALTER COLUMN "status" SET NOT NULL;
   ALTER TABLE "assets_rels" ADD COLUMN "genres_id" integer;
