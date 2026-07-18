@@ -1,40 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import { AssetCard, type AssetCardData } from './AssetCard'
 
-export type AssetCard = {
-  id: string
-  slug: string
-  title: string
-  price: number
-  isFree?: boolean
-  verified?: boolean
-  designerName?: string
-  thumbUrl?: string | null
-}
-
-function AssetGrid({ assets }: { assets: AssetCard[] }) {
-  return (
-    <div className="bento">
-      {assets.map((a) => (
-        <Link key={a.id} href={`/marketplace/${a.slug}`} className="card-a">
-          <div className="thumb" style={a.thumbUrl ? { background: `center/cover no-repeat url(${a.thumbUrl})` } : undefined} />
-          <div className="card-body">
-            <h3>{a.title}</h3>
-            {a.designerName && <div className="byline">{a.designerName}</div>}
-            <div className="card-foot">
-              <span className="price">{a.isFree ? 'Free' : `$${Number(a.price || 0).toLocaleString()}`}</span>
-              {a.verified && <span className="badge verified">✓ Verified</span>}
-            </div>
-          </div>
-        </Link>
-      ))}
-    </div>
-  )
-}
-
-export function FeaturedTabs({ featured, free }: { featured: AssetCard[]; free: AssetCard[] }) {
+export function FeaturedTabs({ featured, free, isLoggedIn }: { featured: AssetCardData[]; free: AssetCardData[]; isLoggedIn: boolean }) {
   const [tab, setTab] = useState<'featured' | 'free'>(featured.length > 0 ? 'featured' : 'free')
 
   if (featured.length === 0 && free.length === 0) return null
@@ -53,7 +22,11 @@ export function FeaturedTabs({ featured, free }: { featured: AssetCard[]; free: 
           </button>
         </div>
       )}
-      <AssetGrid assets={list} />
+      <div className="grid-dense">
+        {list.map((a, i) => (
+          <AssetCard key={a.id} asset={a} index={i} isLoggedIn={isLoggedIn} />
+        ))}
+      </div>
     </div>
   )
 }

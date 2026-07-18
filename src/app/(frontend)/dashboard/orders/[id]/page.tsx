@@ -55,7 +55,9 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       {canMessage && asset && (
         existingReview.docs.length > 0 ? (
           <div style={{ marginBottom: 24 }}>
-            <h4 style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Your review</h4>
+            <h4 style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>
+              Your review {existingReview.docs[0].status === 'pending' && <span className="status-pill warn">Pending approval</span>}
+            </h4>
             <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>
               {'★'.repeat(existingReview.docs[0].rating)}{'☆'.repeat(5 - existingReview.docs[0].rating)} {existingReview.docs[0].comment}
             </p>

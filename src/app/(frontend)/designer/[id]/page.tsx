@@ -1,15 +1,36 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
 import { SiteNav } from '../../components/SiteNav'
 import { SiteFooter } from '../../components/SiteFooter'
+import { AssetCard, type AssetCardData } from '../../components/AssetCard'
+import { getSessionUser } from '@/lib/session'
 
 export const dynamic = 'force-dynamic'
+
+function toCardData(a: any): AssetCardData {
+  return {
+    id: String(a.id),
+    slug: a.slug,
+    title: a.title,
+    price: a.price,
+    isFree: a.isFree,
+    originalPrice: a.originalPrice,
+    dealLabel: a.dealLabel,
+    ribbon: a.ribbon,
+    verified: a.verified,
+    rating: a.rating,
+    reviewCount: a.reviewCount,
+    categoryName: typeof a.category === 'object' ? a.category?.name : undefined,
+    engineLabel: typeof a.engine === 'object' ? `${a.engine?.shortLabel || a.engine?.name || ''} ${a.engineVersionBuilt || ''}`.trim() : undefined,
+    thumbUrl: Array.isArray(a.gallery) && typeof a.gallery[0] === 'object' ? a.gallery[0]?.url : null,
+  }
+}
 
 export default async function DesignerProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const payload = await getPayload({ config })
+  const viewer = await getSessionUser().catch(() => null)
 
   const designer: any = await payload.findByID({ collection: 'users', id }).catch(() => null)
   if (!designer || designer.role !== 'designer') notFound()
@@ -24,7 +45,7 @@ export default async function DesignerProfilePage({ params }: { params: Promise<
 
   const reviews = await payload.find({
     collection: 'reviews',
-    where: { asset: { in: assets.docs.map((a: any) => a.id) } },
+    where: { asset: { in: assets.docs.map((a: any) => a.id) }, status: { equals: 'published' } },
     limit: 200,
   })
   const avgRating = reviews.docs.length > 0
@@ -57,18 +78,9 @@ export default async function DesignerProfilePage({ params }: { params: Promise<
         {assets.docs.length === 0 ? (
           <div className="empty" style={{ marginBottom: 60 }}>No published listings yet.</div>
         ) : (
-          <div className="grid" style={{ paddingBottom: 60 }}>
-            {assets.docs.map((a: any) => (
-              <Link key={a.id} href={`/marketplace/${a.slug}`} className="card-a">
-                <div className="thumb" />
-                <div className="card-body">
-                  <h3>{a.title}</h3>
-                  <div className="card-foot">
-                    <span className="price">{a.isFree ? 'Free' : `$${Number(a.price || 0).toLocaleString()}`}</span>
-                    {a.verified && <span className="badge verified">✓ Verified</span>}
-                  </div>
-                </div>
-              </Link>
+          <div className="grid-dense" style={{ paddingBottom: 60 }}>
+            {assets.docs.map((a: any, i: number) => (
+              <AssetCard key={a.id} asset={toCardData(a)} index={i} isLoggedIn={Boolean(viewer)} />
             ))}
           </div>
         )}

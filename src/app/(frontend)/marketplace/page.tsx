@@ -4,9 +4,31 @@ import config from '@payload-config'
 import { SiteNav } from '../components/SiteNav'
 import { SiteFooter } from '../components/SiteFooter'
 import { Reveal } from '../components/Reveal'
+import { AssetCard, type AssetCardData } from '../components/AssetCard'
+import { getSessionUser } from '@/lib/session'
 import type { Where } from 'payload'
 
 export const dynamic = 'force-dynamic'
+
+function toCardData(a: any): AssetCardData {
+  return {
+    id: String(a.id),
+    slug: a.slug,
+    title: a.title,
+    price: a.price,
+    isFree: a.isFree,
+    originalPrice: a.originalPrice,
+    dealLabel: a.dealLabel,
+    ribbon: a.ribbon,
+    verified: a.verified,
+    rating: a.rating,
+    reviewCount: a.reviewCount,
+    designerName: typeof a.designer === 'object' ? a.designer?.studioName || a.designer?.name : undefined,
+    categoryName: typeof a.category === 'object' ? a.category?.name : undefined,
+    engineLabel: typeof a.engine === 'object' ? `${a.engine?.shortLabel || a.engine?.name || ''} ${a.engineVersionBuilt || ''}`.trim() : undefined,
+    thumbUrl: Array.isArray(a.gallery) && typeof a.gallery[0] === 'object' ? a.gallery[0]?.url : null,
+  }
+}
 
 type SearchParams = {
   q?: string
@@ -26,6 +48,7 @@ export default async function MarketplacePage({
 }) {
   const sp = await searchParams
   const payload = await getPayload({ config })
+  const user = await getSessionUser().catch(() => null)
 
   const [engines, categories, genres] = await Promise.all([
     payload.find({ collection: 'engines', limit: 100, sort: 'name' }),
@@ -166,21 +189,9 @@ export default async function MarketplacePage({
               <div className="empty">No assets match these filters yet.</div>
             ) : (
               <Reveal>
-                <div className="grid">
-                  {assets.docs.map((a: any) => (
-                    <Link key={a.id} href={`/marketplace/${a.slug}`} className="card-a">
-                      <div className="thumb" />
-                      <div className="card-body">
-                        <h3>{a.title}</h3>
-                        <div className="byline">
-                          {typeof a.designer === 'object' ? a.designer?.studioName || a.designer?.name : ''}
-                        </div>
-                        <div className="card-foot">
-                          <span className="price">{a.isFree ? 'Free' : `$${Number(a.price || 0).toLocaleString()}`}</span>
-                          {a.verified && <span className="badge verified">✓ Verified</span>}
-                        </div>
-                      </div>
-                    </Link>
+                <div className="grid-dense">
+                  {assets.docs.map((a: any, i: number) => (
+                    <AssetCard key={a.id} asset={toCardData(a)} index={i} isLoggedIn={Boolean(user)} />
                   ))}
                 </div>
               </Reveal>

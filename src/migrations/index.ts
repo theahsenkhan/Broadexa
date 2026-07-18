@@ -4,6 +4,7 @@ import * as migration_20260715_192518_add_site_content_faq_seo from './20260715_
 import * as migration_20260716_145740_add_genres_blog_categories_job_apps from './20260716_145740_add_genres_blog_categories_job_apps';
 import * as migration_20260716_205003_add_messaging_reviews_users_updates from './20260716_205003_add_messaging_reviews_users_updates';
 import * as migration_20260716_205926_add_homepage_redesign_fields from './20260716_205926_add_homepage_redesign_fields';
+import * as migration_20260718_003656_add_wishlists_review_status_homepage_sections from './20260718_003656_add_wishlists_review_status_homepage_sections';
 
 export const migrations = [
   {
@@ -34,6 +35,11 @@ export const migrations = [
   {
     up: migration_20260716_205926_add_homepage_redesign_fields.up,
     down: migration_20260716_205926_add_homepage_redesign_fields.down,
-    name: '20260716_205926_add_homepage_redesign_fields'
+    name: '20260716_205926_add_homepage_redesign_fields',
+  },
+  {
+    up: migration_20260718_003656_add_wishlists_review_status_homepage_sections.up,
+    down: migration_20260718_003656_add_wishlists_review_status_homepage_sections.down,
+    name: '20260718_003656_add_wishlists_review_status_homepage_sections'
   },
 ];

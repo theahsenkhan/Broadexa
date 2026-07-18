@@ -76,6 +76,45 @@ export const Assets: CollectionConfig = {
     },
     { name: 'featured', type: 'checkbox', defaultValue: false, admin: { position: 'sidebar' }, access: { update: adminOnly } },
 
+    // ── Card display (bootstrap numbers for a cold-start marketplace — separate from the real Reviews collection) ──
+    {
+      name: 'rating', type: 'number', min: 0, max: 5,
+      admin: { position: 'sidebar', description: 'Star rating shown on cards (0–5). Set this until enough real reviews come in.' },
+    },
+    {
+      name: 'reviewCount', type: 'number', min: 0,
+      admin: { position: 'sidebar', description: 'Review count shown next to the star rating on cards.' },
+    },
+    {
+      name: 'originalPrice', type: 'number', min: 0,
+      admin: { position: 'sidebar', condition: (data) => !data?.isFree, description: 'Optional. If higher than Price, the card shows it struck through with a deal label.' },
+    },
+    {
+      name: 'dealLabel', type: 'select', defaultValue: 'none',
+      options: [
+        { label: 'None', value: 'none' },
+        { label: 'Intro price', value: 'intro' },
+        { label: 'Launch price', value: 'launch' },
+        { label: 'Featured', value: 'featured' },
+      ],
+      admin: { position: 'sidebar', description: 'A quiet label next to the price. Only shows when Original price is set.' },
+    },
+    {
+      name: 'ribbon', type: 'select', defaultValue: 'none',
+      options: [
+        { label: 'None', value: 'none' },
+        { label: "Editor's Choice", value: 'editors-choice' },
+        { label: 'Best Seller', value: 'best-seller' },
+        { label: 'Best Value', value: 'best-value' },
+        { label: 'New', value: 'new' },
+      ],
+      admin: { position: 'sidebar', description: 'A small corner tag signalling curation — independent of Featured.' },
+    },
+    {
+      name: 'wishlistCount', type: 'number', defaultValue: 0, min: 0,
+      admin: { position: 'sidebar', readOnly: true, description: 'How many buyers have saved this. Updates automatically.' },
+    },
+
     // ── SEO (optional overrides) ──
     { name: 'seoTitle', type: 'text', admin: { position: 'sidebar' } },
     { name: 'seoDescription', type: 'textarea', admin: { position: 'sidebar' } },

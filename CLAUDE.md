@@ -18,27 +18,51 @@ Slogan: "The home of broadcast design." Built SILENTLY (founder has employment c
   + Cloudflare Stream (previews) + Stripe Connect (+ Invoicing) + Resend + Netlify.
 
 ## Status
-### Done (Session 1)
-- Project scaffold: package.json, next.config.mjs, tsconfig, .env.example
-- Full schema as Payload collections: Users (roles+badges), Media, Assets (full listing
-  requirements + verified/status workflow), Engines, Categories, Orders, Projects, Bids,
-  Posts (blog), Jobs, AwardEntries
-- SiteSettings global: page-visibility switches + commission settings
-- Frontend: brand CSS, layout, homepage (reads SiteSettings + published assets)
-- Payload admin routes wired ((payload) route group)
+### Done
+- Full Payload schema: Users, Media, AssetFiles, Assets, Engines, Categories, Genres, Orders,
+  Projects, Bids, Posts, BlogCategories, Jobs, JobApplications, AwardEntries, Competitions,
+  FaqItems, Messages, Reviews, Wishlists — plus the SiteSettings global (visibility switches,
+  branding, homepage content incl. hero/category tiles/editor's picks/feature bands/blog row,
+  sell page, footer, SEO, legal, commerce).
+- Marketplace: /marketplace (search + engine/category/genre/price/verified/free filters),
+  /marketplace/[slug] listing page, dense asset cards (ribbon, rating, deal pricing, verified
+  badge, wishlist heart, compare), /compare side-by-side specs.
+- Designer flow: signup, /sell, upload wizard, dashboard (assets/orders/projects/jobs/payouts).
+- R2 storage wired (falls back to local disk until R2 env vars are set — see below).
+- Stripe Connect: checkout (standard + exclusive buyout), multi-item cart (separate
+  charges/transfers for multi-designer carts), invoice-request flow, webhooks, printable
+  invoices/receipts.
+- Services hub: post project, private bids (+public count), accept/decline.
+- Messaging: scoped to a paid order or accepted bid only, contact-info sharing auto-blocked.
+- Reviews: buyer-submitted (order-verified, admin-approved) + admin-authored seed/editorial
+  reviews, average rating + list on listing and designer profile pages.
+- Wishlists: per-user saved assets, live count synced onto each Asset.
+- Designer public profiles, marketplace text search, forgot/reset password (needs an email
+  adapter — see below), account settings, ToS acceptance at signup, sitemap.xml/robots.txt.
+- Blog, Jobs (open posting + admin verification), Awards, Competitions, FAQ pages.
+- Homepage: animated split hero (HUD mockup, floating gradient blobs/wave), engine strip,
+  how-it-works, category tiles, featured/free tabs, editor's picks row, alternating feature
+  bands (on a dark ink section), verified explainer, competitions teaser, stats (count-up),
+  blog row, testimonials, dual buy/sell CTA — every section is CMS-editable and reorderable
+  via one drag-to-reorder field in SiteSettings.
+- List-page spacing/layout polish (marketplace/blog/jobs/services/awards/competitions).
+- Deployed to Netlify (broadexa.netlify.app), gated behind all-OFF SiteSettings visibility
+  switches. Migrations self-apply on first successful production DB connect (`prodMigrations`).
 
-### NOT done yet — build order
-1. `npm install` + first run + fix any Payload v3 API drift (importMap regenerates via
-   `npx payload generate:importmap`). Create Supabase project "Broadexa", set DATABASE_URI.
-2. Seed script: engines + categories from locked lists.
-3. Marketplace pages: /marketplace (filters: engine, genre, price, verified), /marketplace/[slug]
-   (listing page per locked UI: preview video, specs table, includes chips, buy box w/ 3 paths).
-4. Designer flow: signup, /sell page (copy locked in chat), upload wizard, dashboard.
-5. R2 direct uploads (multipart, resumable — Uppy/tus) + signed expiring download URLs.
-6. Stripe Connect: checkout, exclusive buyout flow (escrow), invoice-request flow, webhooks.
-7. Services hub: post project, private bids (+public count), milestones.
-8. Blog, Jobs, Awards entry pages. FAQ page (copy locked in chat).
-9. QA → deploy to Netlify (site stays behind visibility switches).
+### Known gaps
+1. **Cloudflare R2 not configured** — `.env` has the R2 vars commented out, so Media/AssetFiles
+   uploads fall back to local disk (won't persist on Netlify's serverless filesystem). Sample
+   catalog content was seeded without gallery photos for this reason — cards show a styled
+   gradient + icon placeholder until real images are uploaded. Set the four `R2_*` vars to fix.
+2. **No email adapter (Resend) configured** — forgot/reset-password tokens currently only log
+   to the server console instead of emailing the user. Wire up Resend to make that flow work.
+3. **Sample content needs seeding once, per environment** — visit `/api/admin/seed-sample-content`
+   while signed in as admin (safe to reload; skips anything that already exists). This sandbox
+   can't reach the production DB directly, so it couldn't be run automatically — do this once
+   after the next deploy.
+4. Stripe Connect and R2 are both still using placeholder/commented env vars in `.env.example` —
+   confirm real keys are set in Netlify's environment before flipping any SiteSettings visibility
+   switch on for real users.
 
 ## Design reference
 - UI mock: broadexa-ui-v2.html (3 screens: home, marketplace, listing) — match it.

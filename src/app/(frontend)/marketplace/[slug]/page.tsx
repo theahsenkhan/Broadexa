@@ -41,7 +41,7 @@ export default async function ListingPage({ params }: { params: Promise<{ slug: 
   const designer = typeof asset.designer === 'object' ? asset.designer : null
 
   const payload = await getPayload({ config })
-  const reviews = await payload.find({ collection: 'reviews', where: { asset: { equals: asset.id } }, sort: '-createdAt', limit: 50, depth: 1 })
+  const reviews = await payload.find({ collection: 'reviews', where: { asset: { equals: asset.id }, status: { equals: 'published' } }, sort: '-createdAt', limit: 50, depth: 1 })
   const avgRating = reviews.docs.length > 0
     ? (reviews.docs.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.docs.length).toFixed(1)
     : null

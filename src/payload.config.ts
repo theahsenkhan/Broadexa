@@ -25,6 +25,7 @@ import { Competitions } from './collections/Competitions'
 import { FaqItems } from './collections/FaqItems'
 import { Messages } from './collections/Messages'
 import { Reviews } from './collections/Reviews'
+import { Wishlists } from './collections/Wishlists'
 import { SiteSettings } from './globals/SiteSettings'
 import { migrations } from './migrations'
 
@@ -44,7 +45,7 @@ export default buildConfig({
   collections: [
     Users, Media, AssetFiles, Assets, Engines, Categories, Genres, Orders, Projects, Bids,
     Posts, BlogCategories, Jobs, JobApplications, AwardEntries, Competitions, FaqItems,
-    Messages, Reviews,
+    Messages, Reviews, Wishlists,
   ],
   globals: [SiteSettings],
   editor: lexicalEditor(),

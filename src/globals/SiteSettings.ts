@@ -72,6 +72,52 @@ export const SiteSettings: GlobalConfig = {
             { name: 'ctaBuyLabel', type: 'text', defaultValue: 'Browse the marketplace', label: 'Closing CTA — buy button label' },
             { name: 'ctaSellLabel', type: 'text', defaultValue: 'Start selling', label: 'Closing CTA — sell button label' },
             {
+              name: 'categoryTiles', type: 'group', label: 'Category tiles section',
+              fields: [
+                { name: 'heading', type: 'text', defaultValue: 'Explore by category' },
+                { name: 'subheading', type: 'text', defaultValue: 'Every listing is admin-reviewed before it goes live' },
+                {
+                  name: 'tiles', type: 'array', label: 'Tiles (item counts are pulled live — no need to update them)',
+                  fields: [
+                    { name: 'category', type: 'relationship', relationTo: 'categories', required: true },
+                    { name: 'image', type: 'upload', relationTo: 'media', label: 'Tile image (optional — a styled placeholder shows if empty)' },
+                  ],
+                },
+              ],
+            },
+            {
+              name: 'editorsPicks', type: 'group', label: "Editor's picks section (horizontal scroll row)",
+              fields: [
+                { name: 'heading', type: 'text', defaultValue: "Editor's picks" },
+                { name: 'subheading', type: 'text', defaultValue: 'Hand-selected for build quality and on-engine accuracy' },
+                { name: 'assets', type: 'relationship', relationTo: 'assets', hasMany: true, label: 'Picked assets (shown in this order)' },
+              ],
+            },
+            {
+              name: 'featureBands', type: 'array', label: 'Alternating feature bands (image one side, text the other)',
+              defaultValue: [
+                { eyebrow: 'Verified badge', heading: 'Verified on-engine — not just claimed', body: 'A Verified badge means the designer supplied a recording of the asset running live on the engine, and our team checked it matches the listing. Every listing is admin-reviewed either way.', imageSide: 'right' },
+                { eyebrow: 'Commission', heading: 'You keep 80%. Always.', body: 'Flat 20% commission on every sale and custom project — no tiers, no surprises. You set your own prices. Payouts run monthly through Stripe Connect.', imageSide: 'left' },
+                { eyebrow: 'Messaging', heading: 'Bid privately. Message safely.', body: 'Bids stay private — only the count is public. Buyer/designer messaging is scoped to a real order or accepted bid, and contact-info sharing is automatically blocked.', imageSide: 'right' },
+              ],
+              fields: [
+                { name: 'eyebrow', type: 'text', label: 'Small label above the heading' },
+                { name: 'heading', type: 'text', required: true },
+                { name: 'body', type: 'textarea', required: true },
+                { name: 'image', type: 'upload', relationTo: 'media', label: 'Image (optional — a styled placeholder shows if empty)' },
+                {
+                  name: 'imageSide', type: 'select', defaultValue: 'right',
+                  options: [{ label: 'Image on the right', value: 'right' }, { label: 'Image on the left', value: 'left' }],
+                },
+              ],
+            },
+            {
+              name: 'blogRow', type: 'group', label: 'Latest from blog section',
+              fields: [
+                { name: 'heading', type: 'text', defaultValue: 'Latest from the blog' },
+              ],
+            },
+            {
               name: 'valueProps', type: 'array', label: 'Value props row (icon + short blurb, leave empty to hide)',
               defaultValue: [
                 { icon: '💰', title: '80% commission', body: 'You keep 80% of every sale. We take 20% — nothing else.' },
@@ -101,14 +147,18 @@ export const SiteSettings: GlobalConfig = {
             },
             {
               name: 'sectionOrder', type: 'select', hasMany: true, label: 'Homepage section order (drag to reorder — sections not selected are hidden)',
-              defaultValue: ['howItWorks', 'valueProps', 'featured', 'verifiedExplainer', 'competitionsTeaser', 'stats', 'testimonials'],
+              defaultValue: ['categoryTiles', 'howItWorks', 'valueProps', 'featured', 'editorsPicks', 'featureBands', 'verifiedExplainer', 'competitionsTeaser', 'stats', 'blogRow', 'testimonials'],
               options: [
+                { label: 'Category tiles', value: 'categoryTiles' },
                 { label: 'How it works', value: 'howItWorks' },
                 { label: 'Value props', value: 'valueProps' },
                 { label: 'Featured assets (incl. free tab)', value: 'featured' },
+                { label: "Editor's picks", value: 'editorsPicks' },
+                { label: 'Feature bands', value: 'featureBands' },
                 { label: 'Verified badge explainer', value: 'verifiedExplainer' },
                 { label: 'Competitions teaser', value: 'competitionsTeaser' },
                 { label: 'Stats', value: 'stats' },
+                { label: 'Latest from blog', value: 'blogRow' },
                 { label: 'Testimonials', value: 'testimonials' },
               ],
             },
