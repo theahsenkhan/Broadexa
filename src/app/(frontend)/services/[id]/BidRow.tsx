@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export function BidRow({ bid, projectId }: { bid: any; projectId: string }) {
   const router = useRouter()
@@ -36,12 +37,17 @@ export function BidRow({ bid, projectId }: { bid: any; projectId: string }) {
       <td>{bid.timelineDays ? `${bid.timelineDays}d` : '—'}</td>
       <td><span className="status-pill">{bid.status}</span></td>
       <td>
-        {bid.status === 'submitted' && (
-          <div style={{ display: 'flex', gap: 6 }}>
-            <button className="btn btn-primary" style={{ padding: '4px 10px', fontSize: 11.5 }} disabled={loading} onClick={() => setStatus('accepted')}>Accept</button>
-            <button className="btn btn-ghost" style={{ padding: '4px 10px', fontSize: 11.5 }} disabled={loading} onClick={() => setStatus('declined')}>Decline</button>
-          </div>
-        )}
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          {bid.status === 'submitted' && (
+            <>
+              <button className="btn btn-primary" style={{ padding: '4px 10px', fontSize: 11.5 }} disabled={loading} onClick={() => setStatus('accepted')}>Accept</button>
+              <button className="btn btn-ghost" style={{ padding: '4px 10px', fontSize: 11.5 }} disabled={loading} onClick={() => setStatus('declined')}>Decline</button>
+            </>
+          )}
+          {(bid.status === 'submitted' || bid.status === 'accepted') && (
+            <Link href={`/messages/bid/${bid.id}`} style={{ fontSize: 11.5, color: 'var(--violet)', fontWeight: 600 }}>Message</Link>
+          )}
+        </div>
       </td>
     </tr>
   )

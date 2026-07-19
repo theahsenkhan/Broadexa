@@ -9,6 +9,7 @@ import { getSessionUser } from '@/lib/session'
 import Link from 'next/link'
 import { BidForm } from './BidForm'
 import { BidRow } from './BidRow'
+import { InviteDesigner } from './InviteDesigner'
 
 export const dynamic = 'force-dynamic'
 
@@ -92,6 +93,15 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                     </tbody>
                   </table>
                 )}
+                <InviteDesigner
+                  projectId={String(project.id)}
+                  initialInvited={(project.invitedDesigners || []).map((d: any) => ({
+                    id: String(typeof d === 'object' ? d.id : d),
+                    name: typeof d === 'object' ? d.name : '',
+                    studioName: typeof d === 'object' ? d.studioName : undefined,
+                    username: typeof d === 'object' ? d.username : undefined,
+                  }))}
+                />
               </div>
             )}
           </div>
@@ -110,8 +120,10 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               <div>
                 <h5 style={{ marginBottom: 6 }}>Your bid</h5>
                 <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>${myBid.amount} · {myBid.timelineDays || '—'} days · <span className="status-pill">{myBid.status}</span></p>
-                {myBid.status === 'accepted' && (
-                  <Link className="btn btn-primary btn-block" style={{ marginTop: 12 }} href={`/messages/bid/${myBid.id}`}>Message client</Link>
+                {(myBid.status === 'submitted' || myBid.status === 'accepted') && (
+                  <Link className="btn btn-primary btn-block" style={{ marginTop: 12 }} href={`/messages/bid/${myBid.id}`}>
+                    {myBid.status === 'accepted' ? 'Message client' : 'Ask a question / negotiate'}
+                  </Link>
                 )}
               </div>
             ) : isDesigner ? (

@@ -1,12 +1,14 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { getSessionUser } from '@/lib/session'
+import { ProfileMenu } from '../components/ProfileMenu'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await getSessionUser()
   if (!user) redirect('/login?next=/dashboard')
 
   const isDesigner = user.role === 'designer' || user.role === 'admin'
+  const avatar: any = (user as any).avatar
 
   return (
     <>
@@ -14,13 +16,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <nav className="nav">
           <Link href="/" className="logo">BROADEXA</Link>
           <div className="navlinks">
-            <span style={{ color: 'var(--muted)' }}>{user.name}</span>
+            <Link href="/">Home</Link>
+            <Link href="/marketplace">Marketplace</Link>
           </div>
           <div className="nav-cta">
-            <Link className="btn btn-ghost" href="/marketplace">Marketplace</Link>
-            <form action="/api/users/logout" method="POST">
-              <button className="btn btn-ghost" type="submit">Sign out</button>
-            </form>
+            <ProfileMenu name={user.name} username={(user as any).username} role={user.role} avatarUrl={avatar?.url} />
           </div>
         </nav>
       </div>

@@ -18,6 +18,7 @@
     "@payloadcms/richtext-lexical": "^3.0.0",
     "@payloadcms/storage-s3": "^3.86.0",
     "graphql": "^16.9.0",
+    "jose": "^6.2.3",
     "next": "15.4.11",
     "payload": "^3.0.0",
     "react": "^19.0.0",

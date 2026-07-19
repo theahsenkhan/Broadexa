@@ -20,9 +20,10 @@ export function HowItWorks({ buyerSteps, designerSteps }: { buyerSteps: Step[]; 
       </div>
       <div className="hiw-steps">
         {steps.map((s, i) => (
-          <div key={i} className="card-a" style={{ padding: 20 }}>
-            <h3 style={{ marginBottom: 6, fontSize: 15 }}>{s.title}</h3>
-            <p style={{ fontSize: 13.5, color: 'var(--muted)', lineHeight: 1.6 }}>{s.body}</p>
+          <div key={i} className="hiw-card">
+            <div className="hiw-num">{i + 1}</div>
+            <h3>{s.title}</h3>
+            <p>{s.body}</p>
           </div>
         ))}
       </div>

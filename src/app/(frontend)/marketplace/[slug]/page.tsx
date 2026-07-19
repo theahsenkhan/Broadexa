@@ -115,10 +115,15 @@ export default async function ListingPage({ params }: { params: Promise<{ slug: 
           <BuyBox asset={asset} isLoggedIn={Boolean(user)} />
         </div>
 
-        {designer && (
+        {designer && designer.username && (
           <div style={{ paddingBottom: 60 }}>
-            <Link href={`/designer/${designer.id}`} className="designer-card">
-              <div className="avatar" />
+            <Link href={`/designer/${designer.username}`} className="designer-card">
+              {designer.avatar?.url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={designer.avatar.url} alt="" className="avatar" style={{ objectFit: 'cover' }} />
+              ) : (
+                <div className="avatar" />
+              )}
               <div>
                 <div className="name">{designer.studioName || designer.name}</div>
                 <div className="sub">{designer.verifiedDesigner ? 'Verified designer' : 'Designer'}</div>

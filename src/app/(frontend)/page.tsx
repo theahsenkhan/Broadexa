@@ -417,12 +417,10 @@ export default async function Home() {
 
       {settings?.showEngineStrip !== false && engineLabels.length > 0 && (
         <div className="engine-strip">
-          <div className="container">
-            <div className="engine-strip-row">
-              {engineLabels.map((label: string, i: number) => (
-                <span key={i} className="engine-pill">{label}</span>
-              ))}
-            </div>
+          <div className="engine-marquee">
+            {[...engineLabels, ...engineLabels].map((label: string, i: number) => (
+              <span key={i} className="engine-pill">{label}</span>
+            ))}
           </div>
         </div>
       )}
@@ -445,7 +443,7 @@ export default async function Home() {
                   <div className="dual-cta-card">
                     <h3>Design broadcast assets?</h3>
                     <p>List your work, set your own prices, and keep 80% of every sale.</p>
-                    <Link className="btn btn-dark" href="/sell">{settings?.ctaSellLabel || 'Start selling'}</Link>
+                    <Link className="btn btn-primary" href="/sell">{settings?.ctaSellLabel || 'Start selling'}</Link>
                   </div>
                 )}
               </div>

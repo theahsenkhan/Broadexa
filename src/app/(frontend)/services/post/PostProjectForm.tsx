@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-export function PostProjectForm({ userId, engines }: { userId: string; engines: { id: string; name: string }[] }) {
+export function PostProjectForm({ userId, engines, inviteUsername }: { userId: string; engines: { id: string; name: string }[]; inviteUsername?: string }) {
   const router = useRouter()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -35,6 +35,15 @@ export function PostProjectForm({ userId, engines }: { userId: string; engines: 
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data?.errors?.[0]?.message || 'Could not post project')
+
+      if (inviteUsername) {
+        await fetch(`/api/projects/${data.doc.id}/invite`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: inviteUsername }),
+        }).catch(() => {})
+      }
+
       router.push(`/services/${data.doc.id}`)
       router.refresh()
     } catch (e: any) {

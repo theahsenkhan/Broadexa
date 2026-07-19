@@ -10,10 +10,18 @@ export default async function DashboardProjectsPage() {
   if (!user) return null
   const payload = await getPayload({ config })
 
-  const [posted, bids] = await Promise.all([
+  const isDesigner = user.role === 'designer' || user.role === 'admin'
+
+  const [posted, bids, invited] = await Promise.all([
     payload.find({ collection: 'projects', where: { postedBy: { equals: user.id } }, sort: '-createdAt', limit: 100 }),
     payload.find({ collection: 'bids', where: { designer: { equals: user.id } }, sort: '-createdAt', limit: 100, depth: 1 }),
+    isDesigner
+      ? payload.find({ collection: 'projects', where: { invitedDesigners: { equals: user.id }, status: { equals: 'open' } }, sort: '-createdAt', limit: 50 })
+      : Promise.resolve({ docs: [] as any[] }),
   ])
+
+  const biddedProjectIds = new Set(bids.docs.map((b: any) => String(typeof b.project === 'object' ? b.project?.id : b.project)))
+  const pendingInvites = invited.docs.filter((p: any) => !biddedProjectIds.has(String(p.id)))
 
   return (
     <div>
@@ -22,7 +30,25 @@ export default async function DashboardProjectsPage() {
         <Link className="btn btn-primary" href="/services/post">Post a project</Link>
       </div>
 
-      <h4 style={{ fontSize: 12, textTransform: 'uppercase', color: 'var(--muted)', margin: '20px 0 10px' }}>Projects you&apos;ve posted</h4>
+      {isDesigner && pendingInvites.length > 0 && (
+        <>
+          <h4 style={{ fontSize: 12, textTransform: 'uppercase', color: 'var(--violet)', margin: '20px 0 10px' }}>You&apos;ve been invited to bid</h4>
+          <table className="table">
+            <thead><tr><th>Title</th><th>Budget</th><th></th></tr></thead>
+            <tbody>
+              {pendingInvites.map((p: any) => (
+                <tr key={p.id}>
+                  <td>{p.title}</td>
+                  <td>{p.budgetMin || p.budgetMax ? `$${p.budgetMin || 0}–$${p.budgetMax || '?'}` : 'Not specified'}</td>
+                  <td><Link href={`/services/${p.id}`} style={{ color: 'var(--violet)', fontSize: 12.5, fontWeight: 600 }}>View &amp; bid</Link></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+
+      <h4 style={{ fontSize: 12, textTransform: 'uppercase', color: 'var(--muted)', margin: '28px 0 10px' }}>Projects you&apos;ve posted</h4>
       {posted.docs.length === 0 ? (
         <div className="empty">You haven&apos;t posted a project yet.</div>
       ) : (

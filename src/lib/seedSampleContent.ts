@@ -91,29 +91,39 @@ export const faqItems = [
 // across the site until real photos are added per listing.
 export const designers = [
   {
-    email: 'northline-studio@broadexa.seed', name: 'Alex Doyle', studioName: 'Northline Studio',
+    email: 'northline-studio@broadexa.seed', username: 'northline-studio', name: 'Alex Doyle', studioName: 'Northline Studio',
     bio: 'Broadcast design studio specialising in news and current-affairs graphics.',
     country: 'United States', verifiedDesigner: true,
+    profession: 'Broadcast Designer', yearsExperience: 9,
+    skills: [{ skill: 'Viz Engine' }, { skill: 'News graphics' }, { skill: 'Motion design' }],
   },
   {
-    email: 'vantage-point@broadexa.seed', name: 'Priya Anand', studioName: 'Vantage Point',
+    email: 'vantage-point@broadexa.seed', username: 'vantage-point', name: 'Priya Anand', studioName: 'Vantage Point',
     bio: 'AR and virtual graphics for elections, results nights and live events.',
     country: 'United Kingdom', verifiedDesigner: true, certifiedDesigner: true,
+    profession: 'AR Developer', yearsExperience: 7,
+    skills: [{ skill: 'Unreal Engine' }, { skill: 'AR graphics' }, { skill: 'Camera tracking' }],
   },
   {
-    email: 'skyline-fx@broadexa.seed', name: 'Marco Bellini', studioName: 'Skyline FX',
+    email: 'skyline-fx@broadexa.seed', username: 'skyline-fx', name: 'Marco Bellini', studioName: 'Skyline FX',
     bio: 'Weather and data-visualisation packages built for daily broadcast use.',
     country: 'Italy', verifiedDesigner: true,
+    profession: 'Data Visualisation Designer', yearsExperience: 6,
+    skills: [{ skill: 'Zero Density' }, { skill: 'Weather graphics' }, { skill: 'Data viz' }],
   },
   {
-    email: 'courtside-design@broadexa.seed', name: 'Jordan Lee', studioName: 'Courtside Design',
+    email: 'courtside-design@broadexa.seed', username: 'courtside-design', name: 'Jordan Lee', studioName: 'Courtside Design',
     bio: 'Sports desks and scoreboard systems for regional and national broadcasters.',
     country: 'Canada',
+    profession: 'Motion Designer', yearsExperience: 5,
+    skills: [{ skill: 'Pixotope' }, { skill: 'Sports graphics' }, { skill: 'Virtual sets' }],
   },
   {
-    email: 'warmlight-co@broadexa.seed', name: 'Sam Okafor', studioName: 'Warmlight Co',
+    email: 'warmlight-co@broadexa.seed', username: 'warmlight-co', name: 'Sam Okafor', studioName: 'Warmlight Co',
     bio: 'Talk-show and studio sets with an emphasis on warm, approachable lighting.',
     country: 'United States',
+    profession: 'Virtual Set Designer', yearsExperience: 4,
+    skills: [{ skill: 'Brainstorm' }, { skill: 'Studio lighting' }, { skill: 'Virtual sets' }],
   },
 ]
 

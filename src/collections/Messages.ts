@@ -59,7 +59,12 @@ export const Messages: CollectionConfig = {
         } else if (data.contextType === 'bid') {
           const bid = await req.payload.findByID({ collection: 'bids', id: data.contextId, depth: 1 }).catch(() => null)
           if (!bid) throw new APIError('Bid not found', 404)
-          if (bid.status !== 'accepted') throw new APIError('Messaging unlocks once the bid is accepted', 400)
+          // Open as soon as a bid exists, so the designer and project owner can
+          // negotiate price/timeline before the owner decides — not just after
+          // acceptance. Still closed once a bid has been withdrawn or declined.
+          if (bid.status !== 'submitted' && bid.status !== 'accepted') {
+            throw new APIError('Messaging is only available while a bid is active', 400)
+          }
           const project: any = typeof bid.project === 'object' ? bid.project : await req.payload.findByID({ collection: 'projects', id: bid.project })
           const designerId = typeof bid.designer === 'object' ? bid.designer.id : bid.designer
           const posterId = typeof project.postedBy === 'object' ? project.postedBy.id : project.postedBy

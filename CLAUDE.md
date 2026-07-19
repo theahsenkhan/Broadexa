@@ -48,6 +48,20 @@ Slogan: "The home of broadcast design." Built SILENTLY (founder has employment c
 - List-page spacing/layout polish (marketplace/blog/jobs/services/awards/competitions).
 - Deployed to Netlify (broadexa.netlify.app), gated behind all-OFF SiteSettings visibility
   switches. Migrations self-apply on first successful production DB connect (`prodMigrations`).
+- Usernames (unique handles) on every account — used for profile URLs and project invites,
+  since studio/display names can collide. Full designer "CV" profile at /designer/[username]
+  (photo, profession, experience, skills, portfolio link, live-computed stats: assets published/
+  sold, projects delivered, rating) with an "Invite to a project" flow. Lighter /buyer/[username]
+  profile (no purchase history/spend shown — privacy). Project owners can invite a specific
+  designer to bid by username from their project page, and messaging now opens as soon as a bid
+  is submitted (not just after acceptance) so price/timeline can be negotiated beforehand.
+- Google + LinkedIn sign-in wired end-to-end (OAuth code flow, bridges into Payload's own
+  session/JWT mechanism) — inactive until credentials are set, see gap below.
+- Homepage/UI polish pass: hover states + focus rings everywhere, looping hero background
+  animation, bigger/numbered "How it works" cards, infinite dark engine-name marquee, unified
+  gradient buttons (no stray black CTAs), dashboard nav reworked (profile dropdown top-right
+  with account settings/sign out, Home link added), /sell buttons route signed-in designers
+  straight to the upload page instead of back to signup.
 
 ### Known gaps
 1. **Cloudflare R2 not configured** — `.env` has the R2 vars commented out, so Media/AssetFiles
@@ -63,6 +77,14 @@ Slogan: "The home of broadcast design." Built SILENTLY (founder has employment c
 4. Stripe Connect and R2 are both still using placeholder/commented env vars in `.env.example` —
    confirm real keys are set in Netlify's environment before flipping any SiteSettings visibility
    switch on for real users.
+5. **Google/LinkedIn sign-in needs real OAuth credentials** — not something that can be created
+   from here. In Google Cloud Console, create an OAuth client ID (type: Web application) and add
+   redirect URI `{your domain}/api/auth/google/callback`; set `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`.
+   For LinkedIn, add the "Sign In with LinkedIn using OpenID Connect" product in the LinkedIn
+   Developer Portal, redirect URI `{your domain}/api/auth/linkedin/callback`, then set
+   `LINKEDIN_CLIENT_ID`/`LINKEDIN_CLIENT_SECRET`. Buttons stay hidden on login/signup until each
+   pair is set — untested end-to-end since this sandbox can't complete a live OAuth round trip;
+   flag it if signing in doesn't work after setting the credentials.
 
 ## Design reference
 - UI mock: broadexa-ui-v2.html (3 screens: home, marketplace, listing) — match it.

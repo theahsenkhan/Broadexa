@@ -5,6 +5,7 @@ import * as migration_20260716_145740_add_genres_blog_categories_job_apps from '
 import * as migration_20260716_205003_add_messaging_reviews_users_updates from './20260716_205003_add_messaging_reviews_users_updates';
 import * as migration_20260716_205926_add_homepage_redesign_fields from './20260716_205926_add_homepage_redesign_fields';
 import * as migration_20260718_003656_add_wishlists_review_status_homepage_sections from './20260718_003656_add_wishlists_review_status_homepage_sections';
+import * as migration_20260719_191940_add_username_profile_fields_invited_designers from './20260719_191940_add_username_profile_fields_invited_designers';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20260718_003656_add_wishlists_review_status_homepage_sections.up,
     down: migration_20260718_003656_add_wishlists_review_status_homepage_sections.down,
-    name: '20260718_003656_add_wishlists_review_status_homepage_sections'
+    name: '20260718_003656_add_wishlists_review_status_homepage_sections',
+  },
+  {
+    up: migration_20260719_191940_add_username_profile_fields_invited_designers.up,
+    down: migration_20260719_191940_add_username_profile_fields_invited_designers.down,
+    name: '20260719_191940_add_username_profile_fields_invited_designers'
   },
 ];

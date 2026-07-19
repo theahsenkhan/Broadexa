@@ -8,10 +8,11 @@ import { PostProjectForm } from './PostProjectForm'
 
 export const dynamic = 'force-dynamic'
 
-export default async function PostProjectPage() {
+export default async function PostProjectPage({ searchParams }: { searchParams: Promise<{ invite?: string }> }) {
   const user = await getSessionUser()
   if (!user) redirect('/login?next=/services/post')
 
+  const { invite } = await searchParams
   const payload = await getPayload({ config })
   const engines = await payload.find({ collection: 'engines', limit: 100, sort: 'name' })
 
@@ -21,9 +22,11 @@ export default async function PostProjectPage() {
       <div className="form-wide">
         <h1 style={{ fontFamily: 'Montserrat', fontWeight: 700, fontSize: 22, marginBottom: 6 }}>Post a project</h1>
         <p style={{ color: 'var(--muted)', fontSize: 13.5, marginBottom: 24 }}>
-          Describe your brief. Designers will bid privately — only the bid count shows publicly.
+          {invite
+            ? `Describe your brief — @${invite} will be invited to bid once it's posted.`
+            : 'Describe your brief. Designers will bid privately — only the bid count shows publicly.'}
         </p>
-        <PostProjectForm userId={String(user.id)} engines={engines.docs.map((e: any) => ({ id: e.id, name: e.name }))} />
+        <PostProjectForm userId={String(user.id)} engines={engines.docs.map((e: any) => ({ id: e.id, name: e.name }))} inviteUsername={invite} />
       </div>
       <SiteFooter />
     </>

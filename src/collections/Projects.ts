@@ -26,6 +26,11 @@ export const Projects: CollectionConfig = {
       options: ['open', 'awarded', 'in-progress', 'delivered', 'closed'],
     },
     { name: 'bidCount', type: 'number', defaultValue: 0, admin: { description: 'Shown publicly. Bids themselves are private (locked decision).' } },
+    {
+      name: 'invitedDesigners', type: 'relationship', relationTo: 'users', hasMany: true,
+      admin: { description: 'Designers the project owner has personally invited to bid. Not required — designers can still bid without an invite.' },
+      filterOptions: { role: { equals: 'designer' } },
+    },
 
     // ── SEO (optional overrides) ──
     { name: 'seoTitle', type: 'text', admin: { position: 'sidebar' } },

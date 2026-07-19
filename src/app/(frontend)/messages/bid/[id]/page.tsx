@@ -16,7 +16,7 @@ export default async function BidMessagesPage({ params }: { params: Promise<{ id
   const payload = await getPayload({ config })
   const bid: any = await payload.findByID({ collection: 'bids', id, depth: 1 }).catch(() => null)
   if (!bid) notFound()
-  if (bid.status !== 'accepted') notFound()
+  if (bid.status !== 'submitted' && bid.status !== 'accepted') notFound()
 
   const project: any = typeof bid.project === 'object' ? bid.project : await payload.findByID({ collection: 'projects', id: bid.project })
   const designerId = typeof bid.designer === 'object' ? bid.designer.id : bid.designer
